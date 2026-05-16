@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Plazas de Viajes</title>
+    <style>
+    body { font-family: sans-serif; line-height: 1.6; background-color: #f4f4f9; padding: 20px; }
+    h1 { text-align: center; color: #333; }
+    .trayecto { background: #fff; margin-bottom: 40px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .trayecto h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    .descripcion { color: #666; font-style: italic; margin-bottom: 15px; }
+    .grid-plazas { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
+    .plaza { border: 1px solid #ddd; padding: 8px; border-radius: 4px; font-size: 0.85em; background: #f9f9f9; display: flex; flex-direction: column; }
+    .num { font-weight: bold; color: #555; }
+    .nombre { color: #27ae60; font-weight: bold; }
+    .ocupada { background-color: #ebf5fb; border-color: #3498db; }
+    .ocupada .nombre { color: #8B0000; }
+    </style>
+</head>
+<body>
+
+    <h1>Visita del Papa a Madrid</h1>
+    <h1>Panel de Ocupación de los Autobuses contratados por la Parroquia de Santo Domingo de Silos</h1>
+
+    <section class="trayecto">
+        <h2>Trayecto 1: Sábado 6 de junio, Plaza del Egido - Plaza de Lima</h2>
+	<p class="descripcion">Un autobús. <b>Hora de salida: 16.00.</b> Nos dejará en el punto más cercano posible a la Plaza de Lima y desde ahí caminaremos hasta el sitio que se nos haya asignado para la Vigilia</p> <div class="grid-plazas">
+            <div class="plaza ocupada"><span class="num">Plaza 1:</span> <span class="nombre">Charlie Díaz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 2:</span> <span class="nombre">Lara González</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 3:</span> <span class="nombre">Elena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 4:</span> <span class="nombre">Ana Luz del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 5:</span> <span class="nombre">Valentina López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 6:</span> <span class="nombre">Mª José del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 7:</span> <span class="nombre">Begoña Tejeda</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 8:</span> <span class="nombre">Isidora Alonso</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 9:</span> <span class="nombre">Iván García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 10:</span> <span class="nombre">Lucía Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 11:</span> <span class="nombre">Fátima García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 12:</span> <span class="nombre">María Aparicio</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 13:</span> <span class="nombre">José Luis Muñoz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 14:</span> <span class="nombre">Antonia Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 15:</span> <span class="nombre">María Isabel Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 16:</span> <span class="nombre">José Manuel Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 17:</span> <span class="nombre">Yolanda Palenzuela</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 18:</span> <span class="nombre">Blanca Cruz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 19:</span> <span class="nombre">Hugo Moreno</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 20:</span> <span class="nombre">Fabiola Cofre</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 21:</span> <span class="nombre">Katherine Jativa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 22:</span> <span class="nombre">Carmen Mª López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 23:</span> <span class="nombre">Blanca Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 24:</span> <span class="nombre">Enrique Revilla</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 25:</span> <span class="nombre">Alfonso Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 26:</span> <span class="nombre">Mª Dolores Alcalde</span></div>
+            <div class="plaza"><span class="num">Plaza 27:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 28:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 29:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 30:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 31:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 32:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 33:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 34:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 35:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 36:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 37:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 38:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 39:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 40:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 41:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 42:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 43:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 44:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 45:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 46:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 47:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 48:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 49:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 50:</span> <span class="nombre">LIBRE</span></div>
+        </div>
+    </section>
+
+    <section class="trayecto">
+        <h2>Trayecto 2: Sábado 6 de junio, Plaza de Lima - Plaza del Egido</h2>
+	<p class="descripcion">Un autobús. <b>Hora de salida: sobre las 23.00</b>, después de la Vigilia. Lugar de salida: lo más cerca posible a la Plaza de Lima, donde el autobús pueda esperarnos. El lugar exacto se comunicará por el grupo de Whatsapp</p> <div class="grid-plazas">
+            <div class="plaza ocupada"><span class="num">Plaza 1:</span> <span class="nombre">Lara González</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 2:</span> <span class="nombre">Elena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 3:</span> <span class="nombre">Ana Luz del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 4:</span> <span class="nombre">Valentina López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 5:</span> <span class="nombre">Mª José del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 6:</span> <span class="nombre">Begoña Tejeda</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 7:</span> <span class="nombre">Isidora Alonso</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 8:</span> <span class="nombre">José Luis Muñoz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 9:</span> <span class="nombre">Antonia Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 10:</span> <span class="nombre">María Isabel Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 11:</span> <span class="nombre">José Manuel Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 12:</span> <span class="nombre">Yolanda Palenzuela</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 13:</span> <span class="nombre">Blanca Cruz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 14:</span> <span class="nombre">Hugo Moreno</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 15:</span> <span class="nombre">Luis Miguel Gª-Pza</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 16:</span> <span class="nombre">Rosa Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 17:</span> <span class="nombre">Luis Miguel Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 18:</span> <span class="nombre">Clara Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 19:</span> <span class="nombre">Natalia Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 20:</span> <span class="nombre">Fabiola Cofre</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 21:</span> <span class="nombre">Katherine Jativa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 22:</span> <span class="nombre">Carmen Mª López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 23:</span> <span class="nombre">Raquel Rivas 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 24:</span> <span class="nombre">Raquel Rivas 2</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 25:</span> <span class="nombre">Enrique Revilla</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 26:</span> <span class="nombre">Alfonso Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 27:</span> <span class="nombre">Mª Dolores Alcalde</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 28:</span> <span class="nombre">Patricia Barrero 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 29:</span> <span class="nombre">Patricia Barrero 2</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 30:</span> <span class="nombre">Fernando Tomás 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 31:</span> <span class="nombre">Fernando Tomás 2</span></div>
+            <div class="plaza"><span class="num">Plaza 32:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 33:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 34:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 35:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 36:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 37:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 38:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 39:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 40:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 41:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 42:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 43:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 44:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 45:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 46:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 47:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 48:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 49:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 50:</span> <span class="nombre">LIBRE</span></div>
+        </div>
+    </section>
+
+    <section class="trayecto">
+        <h2>Trayecto 3: Domingo 7 de junio, Plaza del Egido - Plaza de Cibeles</h2>
+	<p class="descripcion">Dos autobuses. <b>Hora de salida: 6.00 de la mañana.</b> Nos dejará en el lugar más cercano posible a la Plaza de Cibeles y desde ahí caminaremos hasta el lugar que se nos haya asignado para la Misa</p> <div class="grid-plazas">
+            <div class="plaza ocupada"><span class="num">Plaza 1:</span> <span class="nombre">Lara González</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 2:</span> <span class="nombre">Fernando Zaballos</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 3:</span> <span class="nombre">Esperanza Rodríguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 4:</span> <span class="nombre">María Zaballos</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 5:</span> <span class="nombre">Elena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 6:</span> <span class="nombre">Ana Luz del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 7:</span> <span class="nombre">Valentina López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 8:</span> <span class="nombre">Mª José del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 9:</span> <span class="nombre">Begoña Tejeda</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 10:</span> <span class="nombre">Mª Julia Casado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 11:</span> <span class="nombre">Mª José Mateo</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 12:</span> <span class="nombre">Paloma Tejero</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 13:</span> <span class="nombre">Encarnación Blanco</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 14:</span> <span class="nombre">Isidora Alonso</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 15:</span> <span class="nombre">Magdalena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 16:</span> <span class="nombre">Montserrat García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 17:</span> <span class="nombre">Azucena Tolosa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 18:</span> <span class="nombre">Francisco Aparicio</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 19:</span> <span class="nombre">Ana Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 20:</span> <span class="nombre">Ana Sampedro</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 21:</span> <span class="nombre">José Luis Muñoz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 22:</span> <span class="nombre">Antonia Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 23:</span> <span class="nombre">María Isabel Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 24:</span> <span class="nombre">José Manuel Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 25:</span> <span class="nombre">Yolanda Palenzuela</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 26:</span> <span class="nombre">Juan Manuel Ortego 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 27:</span> <span class="nombre">Juan Manuel Ortego 2</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 28:</span> <span class="nombre">Juan Manuel Ortego 3</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 29:</span> <span class="nombre">Juan Manuel Ortego 4</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 30:</span> <span class="nombre">Mercedes Tapia</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 31:</span> <span class="nombre">Carlos Cobeña</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 32:</span> <span class="nombre">Jesús Mata</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 33:</span> <span class="nombre">Carmela Grace</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 34:</span> <span class="nombre">Hugo Moreno</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 35:</span> <span class="nombre">Sabina Gabarron</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 36:</span> <span class="nombre">Mercedes Pérez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 37:</span> <span class="nombre">Luisa Molina</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 38:</span> <span class="nombre">Luis Miguel Gª-Pza</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 39:</span> <span class="nombre">Rosa Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 40:</span> <span class="nombre">Luis Miguel Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 41:</span> <span class="nombre">Clara Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 42:</span> <span class="nombre">Natalia Gª-Pza Cuadrado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 43:</span> <span class="nombre">Lucía Turnes</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 44:</span> <span class="nombre">Fabiola Cofre</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 45:</span> <span class="nombre">Katherine Jativa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 46:</span> <span class="nombre">Zoila Panchana</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 47:</span> <span class="nombre">Carmen Mª López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 48:</span> <span class="nombre">Ana Pérez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 49:</span> <span class="nombre">Francisca Pinto</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 50:</span> <span class="nombre">José María Hidalgo</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 51:</span> <span class="nombre">Maria Dolores Ortega</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 52:</span> <span class="nombre">Carmen Ortega</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 53:</span> <span class="nombre">Maria Jesús Martínez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 54:</span> <span class="nombre">Eva García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 55:</span> <span class="nombre">Gema García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 56:</span> <span class="nombre">Enrique Revilla</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 57:</span> <span class="nombre">Alfonso Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 58:</span> <span class="nombre">Mª Dolores Alcalde</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 59:</span> <span class="nombre">Patricia Barrero 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 60:</span> <span class="nombre">Patricia Barrero 2</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 61:</span> <span class="nombre">Loli Hervás</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 62:</span> <span class="nombre">Remedios Rubio</span></div>
+            <div class="plaza"><span class="num">Plaza 63:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 64:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 65:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 66:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 67:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 68:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 69:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 70:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 71:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 72:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 73:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 74:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 75:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 76:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 77:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 78:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 79:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 80:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 81:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 82:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 83:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 84:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 85:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 86:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 87:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 88:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 89:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 90:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 91:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 92:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 93:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 94:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 95:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 96:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 97:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 98:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 99:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 100:</span> <span class="nombre">LIBRE</span></div>
+        </div>
+    </section>
+
+    <section class="trayecto">
+        <h2>Trayecto 4: Domingo 7 de junio, Plaza de Cibeles - Plaza del Egido</h2>
+	<p class="descripcion">Dos autobuses. <b>Hora de salida: sobre las 15.00</b>, después de la Misa y la Procesión. Lugar de salida: lo más cerca posible a la Plaza de Cibeles, donde el autobús pueda esperarnos. El lugar exacto se comunicará por el grupo de Whatsapp</p> <div class="grid-plazas">
+            <div class="plaza ocupada"><span class="num">Plaza 1:</span> <span class="nombre">Charlie Díaz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 2:</span> <span class="nombre">Lara González</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 3:</span> <span class="nombre">Fernando Zaballos</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 4:</span> <span class="nombre">Esperanza Rodríguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 5:</span> <span class="nombre">María Zaballos</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 6:</span> <span class="nombre">Elena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 7:</span> <span class="nombre">Ana Luz del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 8:</span> <span class="nombre">Valentina López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 9:</span> <span class="nombre">Mª José del Prado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 10:</span> <span class="nombre">Begoña Tejeda</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 11:</span> <span class="nombre">Mª Julia Casado</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 12:</span> <span class="nombre">Mª José Mateo</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 13:</span> <span class="nombre">Paloma Tejero</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 14:</span> <span class="nombre">Encarnación Blanco</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 15:</span> <span class="nombre">Isidora Alonso</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 16:</span> <span class="nombre">Magdalena García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 17:</span> <span class="nombre">Montserrat García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 18:</span> <span class="nombre">Azucena Tolosa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 19:</span> <span class="nombre">Iván García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 20:</span> <span class="nombre">Lucía Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 21:</span> <span class="nombre">Fátima García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 22:</span> <span class="nombre">María Aparicio</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 23:</span> <span class="nombre">Francisco Aparicio</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 24:</span> <span class="nombre">Ana Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 25:</span> <span class="nombre">Ana Sampedro</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 26:</span> <span class="nombre">José Luis Muñoz</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 27:</span> <span class="nombre">Antonia Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 28:</span> <span class="nombre">María Isabel Domínguez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 29:</span> <span class="nombre">José Manuel Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 30:</span> <span class="nombre">Yolanda Palenzuela</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 31:</span> <span class="nombre">Juan Manuel Ortego 1</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 32:</span> <span class="nombre">Juan Manuel Ortego 2</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 33:</span> <span class="nombre">Juan Manuel Ortego 3</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 34:</span> <span class="nombre">Juan Manuel Ortego 4</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 35:</span> <span class="nombre">Mercedes Tapia</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 36:</span> <span class="nombre">Carlos Cobeña</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 37:</span> <span class="nombre">Jesús Mata</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 38:</span> <span class="nombre">Carmela Grace</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 39:</span> <span class="nombre">Hugo Moreno</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 40:</span> <span class="nombre">Sabina Gabarron</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 41:</span> <span class="nombre">Mercedes Pérez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 42:</span> <span class="nombre">Luisa Molina</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 43:</span> <span class="nombre">Laura Zaballos</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 44:</span> <span class="nombre">Lucía Turnes</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 45:</span> <span class="nombre">Fabiola Cofre</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 46:</span> <span class="nombre">Katherine Jativa</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 47:</span> <span class="nombre">Zoila Panchana</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 48:</span> <span class="nombre">Carmen Mª López</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 49:</span> <span class="nombre">Ana Pérez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 50:</span> <span class="nombre">Francisca Pinto</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 51:</span> <span class="nombre">José María Hidalgo</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 52:</span> <span class="nombre">Maria Dolores Ortega</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 53:</span> <span class="nombre">Carmen Ortega</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 54:</span> <span class="nombre">Maria Jesús Martínez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 55:</span> <span class="nombre">Eva García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 56:</span> <span class="nombre">Gema García</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 57:</span> <span class="nombre">Blanca Tabera</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 58:</span> <span class="nombre">Enrique Revilla</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 59:</span> <span class="nombre">Alfonso Jiménez</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 60:</span> <span class="nombre">Mª Dolores Alcalde</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 61:</span> <span class="nombre">Loli Hervás</span></div>
+            <div class="plaza ocupada"><span class="num">Plaza 62:</span> <span class="nombre">Remedios Rubio</span></div>
+            <div class="plaza"><span class="num">Plaza 63:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 64:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 65:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 66:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 67:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 68:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 69:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 70:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 71:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 72:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 73:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 74:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 75:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 76:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 77:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 78:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 79:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 80:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 81:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 82:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 83:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 84:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 85:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 86:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 87:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 88:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 89:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 90:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 91:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 92:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 93:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 94:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 95:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 96:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 97:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 98:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 99:</span> <span class="nombre">LIBRE</span></div>
+            <div class="plaza"><span class="num">Plaza 100:</span> <span class="nombre">LIBRE</span></div>
+        </div>
+    </section>
+
+</body>
+</html>
