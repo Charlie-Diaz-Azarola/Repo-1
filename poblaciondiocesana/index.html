@@ -180,14 +180,9 @@
     }
     tfoot td.num-col { text-align: right; }
 
-    /* Celdas de ratio alto */
-    .ratio-alto {
-      background-color: var(--alerta-fondo) !important;
-      color: #9B1C1C;
-      font-weight: 600;
-    }
-    tr.ratio-alto-row td { background-color: var(--alerta-fondo) !important; }
-    tr.ratio-alto-row:hover td { background: #FFE8E8 !important; }
+    /* Filas de ratio alto */
+    tr.ratio-alto-row td { color: #9B1C1C; }
+    tr.ratio-alto-row .ratio-alto { font-weight: 600; }
 
     /* Barra de porcentaje */
     .barra-wrap {
@@ -216,13 +211,9 @@
     .notas p { margin-bottom: 0.3rem; }
     .notas p:last-child { margin-bottom: 0; }
     .leyenda-alerta {
-      display: inline-block;
-      width: 10px; height: 10px;
-      background: var(--alerta-fondo);
-      border: 1px solid #C93737;
-      border-radius: 2px;
-      margin-right: 4px;
-      vertical-align: middle;
+      color: #9B1C1C;
+      font-weight: 700;
+      margin-right: 3px;
     }
 
     /* ── PIE ── */
@@ -396,7 +387,7 @@
     <div class="notas">
       <p>• <strong>Habitantes:</strong> dato IECM (Instituto de Estadística de la Comunidad de Madrid).</p>
       <p>• <strong>Media diocesana:</strong> 1 parroquia por cada 13.428 habitantes.</p>
-      <p>• <span class="leyenda-alerta"></span>Arciprestazgos con ratio superior a 15.000 hab./parroquia: posible situación de infradotación parroquial.</p>
+      <p>• <span class="leyenda-alerta">A</span>Arciprestazgos con ratio superior a 15.000 hab./parroquia: posible situación de infradotación parroquial.</p>
       <p>• Informe generado: 19/05/2026. Fuente: <em>Guía Diocesana, enero 2026</em>.</p>
     </div>
   </div>
@@ -736,7 +727,7 @@
     <div class="notas">
       <p>• <strong>Habitantes:</strong> INE, Padrón Municipal 2023 (datos aproximados).</p>
       <p>• <strong>Media diocesana:</strong> 1 parroquia por cada 12.793 habitantes.</p>
-      <p>• <span class="leyenda-alerta"></span>Municipios con ratio superior a 15.000 hab./parroquia: posible necesidad de refuerzo pastoral.</p>
+      <p>• <span class="leyenda-alerta">A</span>Municipios con ratio superior a 15.000 hab./parroquia: posible necesidad de refuerzo pastoral.</p>
       <p>• Informe generado: 19/05/2026. Fuente parroquias: <em>Guía Diocesana, enero 2026</em>.</p>
     </div>
   </div>
