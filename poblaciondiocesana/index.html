@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Población Diocesana · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --borgoña:   #6B1A1A;
+      --borgoña-oscuro: #4E1212;
+      --dorado:    #C4A24B;
+      --dorado-claro: #EAD898;
+      --fondo:     #F7F3EE;
+      --blanco:    #FFFFFF;
+      --gris-claro:#F0EBE3;
+      --gris-borde:#D6CCBf;
+      --texto:     #2C2118;
+      --texto-suave:#6B5B4E;
+      --alerta-fondo: #FFF5F5;
+      --alerta-borde: #C9373760;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ── CABECERA ── */
+    header {
+      background: linear-gradient(135deg, var(--borgoña-oscuro) 0%, var(--borgoña) 100%);
+      color: var(--blanco);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 4px solid var(--dorado);
+    }
+    header .escudo {
+      font-size: 2.2rem;
+      margin-bottom: 0.4rem;
+      opacity: 0.9;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+    }
+    header p.subtitulo {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── RESUMEN ── */
+    .resumen {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      padding: 1.8rem 2rem;
+      background: var(--blanco);
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    .stat {
+      text-align: center;
+      min-width: 120px;
+    }
+    .stat .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--borgoña);
+      line-height: 1;
+    }
+    .stat .etiq {
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 0.25rem;
+    }
+    .sep { width: 1px; background: var(--gris-borde); align-self: stretch; }
+
+    /* ── NAVEGACIÓN PESTAÑAS ── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      padding: 1.5rem 2rem 0;
+      background: var(--fondo);
+    }
+    .tab-btn {
+      padding: 0.65rem 1.8rem;
+      border: 1px solid var(--gris-borde);
+      background: var(--gris-claro);
+      color: var(--texto-suave);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .tab-btn:first-child { border-radius: 6px 0 0 0; }
+    .tab-btn:last-child  { border-radius: 0 6px 0 0; border-left: none; }
+    .tab-btn.activo {
+      background: var(--blanco);
+      color: var(--borgoña);
+      border-bottom-color: var(--blanco);
+      border-top: 2px solid var(--borgoña);
+    }
+    .tab-btn:hover:not(.activo) { background: var(--dorado-claro); }
+
+    /* ── CONTENIDO ── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    .panel {
+      display: none;
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 2rem;
+    }
+    .panel.activo { display: block; }
+
+    .panel h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--borgoña);
+      margin-bottom: 0.3rem;
+    }
+    .panel .panel-desc {
+      font-size: 0.85rem;
+      color: var(--texto-suave);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── TABLA ── */
+    .tabla-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    thead th {
+      background: var(--borgoña);
+      color: var(--blanco);
+      padding: 0.7rem 0.9rem;
+      text-align: left;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    thead th.num-col { text-align: right; }
+    tbody tr:nth-child(even) { background: var(--gris-claro); }
+    tbody tr:hover { background: var(--dorado-claro); }
+    tbody td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    tbody td.num-col { text-align: right; font-variant-numeric: tabular-nums; }
+    tfoot tr { border-top: 2px solid var(--borgoña); }
+    tfoot td {
+      padding: 0.65rem 0.9rem;
+      font-weight: 700;
+      background: var(--gris-claro);
+    }
+    tfoot td.num-col { text-align: right; }
+
+    /* Celdas de ratio alto */
+    .ratio-alto {
+      background-color: var(--alerta-fondo) !important;
+      color: #9B1C1C;
+      font-weight: 600;
+    }
+    tr.ratio-alto-row td { background-color: var(--alerta-fondo) !important; }
+    tr.ratio-alto-row:hover td { background: #FFE8E8 !important; }
+
+    /* Barra de porcentaje */
+    .barra-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .barra {
+      height: 8px;
+      background: var(--borgoña);
+      border-radius: 4px;
+      min-width: 2px;
+      opacity: 0.7;
+    }
+
+    /* ── NOTAS ── */
+    .notas {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--gris-claro);
+      border-left: 3px solid var(--dorado);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.82rem;
+      color: var(--texto-suave);
+    }
+    .notas p { margin-bottom: 0.3rem; }
+    .notas p:last-child { margin-bottom: 0; }
+    .leyenda-alerta {
+      display: inline-block;
+      width: 10px; height: 10px;
+      background: var(--alerta-fondo);
+      border: 1px solid #C93737;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    /* ── PIE ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      font-size: 0.78rem;
+      color: var(--texto-suave);
+      border-top: 1px solid var(--gris-borde);
+      margin-top: 2rem;
+    }
+    footer a { color: var(--borgoña); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.4rem; }
+      .stat .num { font-size: 1.6rem; }
+      .tabs { padding: 1rem 0.75rem 0; }
+      .panel { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="escudo">✝</div>
+  <h1>Población Diocesana</h1>
+  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+</header>
+
+<div class="resumen">
+  <div class="stat"><div class="num">13</div><div class="etiq">Arciprestazgos</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">127</div><div class="etiq">Parroquias</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">48</div><div class="etiq">Municipios</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">1,7 M</div><div class="etiq">Habitantes</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">13.428</div><div class="etiq">Hab. / parroquia (media)</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn activo" onclick="mostrarPanel('arciprestazgos', this)">Por arciprestazgo</button>
+  <button class="tab-btn" onclick="mostrarPanel('municipios', this)">Por municipio</button>
+</div>
+
+<main>
+
+  <!-- ══ PANEL: ARCIPRESTAZGOS ══ -->
+  <div id="panel-arciprestazgos" class="panel activo">
+    <h2>Parroquias y Habitantes por Arciprestazgo</h2>
+    <p class="panel-desc">Fuente: Guía Diocesana, enero 2026 · IECM (Instituto de Estadística de la Comunidad de Madrid)</p>
+
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Arciprestazgo</th>
+            <th class="num-col">Parroquias</th>
+            <th class="num-col">Habitantes</th>
+            <th class="num-col">Hab. / parroquia</th>
+            <th>% del total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alcorcón</td>
+            <td class="num-col">12</td>
+            <td class="num-col">173.625</td>
+            <td class="num-col">14.468</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(10.2% * 2.5)"></div>10,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Aranjuez</td>
+            <td class="num-col">5</td>
+            <td class="num-col">62.292</td>
+            <td class="num-col">12.458</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(3.7% * 2.5)"></div>3,7 %</div></td>
+          </tr>
+          <tr>
+            <td>Chinchón</td>
+            <td class="num-col">5</td>
+            <td class="num-col">21.225</td>
+            <td class="num-col">4.245</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.2% * 2.5)"></div>1,2 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Fuenlabrada</td>
+            <td class="num-col">11</td>
+            <td class="num-col">190.790</td>
+            <td class="num-col ratio-alto">17.344</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.2% * 2.5)"></div>11,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Getafe</td>
+            <td class="num-col">14</td>
+            <td class="num-col">189.906</td>
+            <td class="num-col">13.564</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.1% * 2.5)"></div>11,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Griñón</td>
+            <td class="num-col">9</td>
+            <td class="num-col">91.352</td>
+            <td class="num-col">10.150</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(5.4% * 2.5)"></div>5,4 %</div></td>
+          </tr>
+          <tr>
+            <td>Leganés</td>
+            <td class="num-col">16</td>
+            <td class="num-col">194.084</td>
+            <td class="num-col">12.130</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.4% * 2.5)"></div>11,4 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Móstoles</td>
+            <td class="num-col">11</td>
+            <td class="num-col">214.006</td>
+            <td class="num-col ratio-alto">19.455</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(12.5% * 2.5)"></div>12,5 %</div></td>
+          </tr>
+          <tr>
+            <td>Navalcarnero</td>
+            <td class="num-col">8</td>
+            <td class="num-col">69.750</td>
+            <td class="num-col">8.718</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(4.1% * 2.5)"></div>4,1 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Parla</td>
+            <td class="num-col">8</td>
+            <td class="num-col">134.833</td>
+            <td class="num-col ratio-alto">16.854</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(7.9% * 2.5)"></div>7,9 %</div></td>
+          </tr>
+          <tr>
+            <td>San Martín de Valdeiglesias</td>
+            <td class="num-col">8</td>
+            <td class="num-col">26.255</td>
+            <td class="num-col">3.281</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.5% * 2.5)"></div>1,5 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Valdemoro</td>
+            <td class="num-col">10</td>
+            <td class="num-col">203.041</td>
+            <td class="num-col ratio-alto">20.304</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.9% * 2.5)"></div>11,9 %</div></td>
+          </tr>
+          <tr>
+            <td>Villaviciosa de Odón</td>
+            <td class="num-col">10</td>
+            <td class="num-col">134.212</td>
+            <td class="num-col">13.421</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(7.9% * 2.5)"></div>7,9 %</div></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td><strong>TOTAL DIÓCESIS</strong></td>
+            <td class="num-col">127</td>
+            <td class="num-col">1.705.371</td>
+            <td class="num-col">13.428</td>
+            <td>100 %</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="notas">
+      <p>• <strong>Habitantes:</strong> dato IECM (Instituto de Estadística de la Comunidad de Madrid).</p>
+      <p>• <strong>Media diocesana:</strong> 1 parroquia por cada 13.428 habitantes.</p>
+      <p>• <span class="leyenda-alerta"></span>Arciprestazgos con ratio superior a 15.000 hab./parroquia: posible situación de infradotación parroquial.</p>
+      <p>• Informe generado: 19/05/2026. Fuente: <em>Guía Diocesana, enero 2026</em>.</p>
+    </div>
+  </div>
+
+  <!-- ══ PANEL: MUNICIPIOS ══ -->
+  <div id="panel-municipios" class="panel">
+    <h2>Parroquias y Habitantes por Municipio</h2>
+    <p class="panel-desc">Fuente: Guía Diocesana, enero 2026 (parroquias) · INE, Padrón Municipal 2023 aprox. (habitantes)</p>
+
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Municipio</th>
+            <th>Arciprestazgo</th>
+            <th class="num-col">Parroquias</th>
+            <th class="num-col">Habitantes</th>
+            <th class="num-col">Hab. / parroquia</th>
+            <th>% del total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Alcorcón -->
+          <tr>
+            <td>Alcorcón</td><td>Alcorcón</td>
+            <td class="num-col">12</td><td class="num-col">173.000</td>
+            <td class="num-col">14.416</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(10.6% * 2)"></div>10,6 %</div></td>
+          </tr>
+          <!-- Aranjuez -->
+          <tr>
+            <td>Aranjuez</td><td>Aranjuez</td>
+            <td class="num-col">5</td><td class="num-col">59.500</td>
+            <td class="num-col">11.900</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(3.7% * 2)"></div>3,7 %</div></td>
+          </tr>
+          <!-- Chinchón -->
+          <tr>
+            <td>Belmonte de Tajo</td><td>Chinchón</td>
+            <td class="num-col">1</td><td class="num-col">1.600</td>
+            <td class="num-col">1.600</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Chinchón</td><td>Chinchón</td>
+            <td class="num-col">1</td><td class="num-col">5.200</td>
+            <td class="num-col">5.200</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.3% * 2)"></div>0,3 %</div></td>
+          </tr>
+          <tr>
+            <td>Colmenar de Oreja</td><td>Chinchón</td>
+            <td class="num-col">1</td><td class="num-col">8.200</td>
+            <td class="num-col">8.200</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.5% * 2)"></div>0,5 %</div></td>
+          </tr>
+          <tr>
+            <td>Valdelaguna</td><td>Chinchón</td>
+            <td class="num-col">1</td><td class="num-col">700</td>
+            <td class="num-col">700</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:1px"></div>0,0 %</div></td>
+          </tr>
+          <tr>
+            <td>Villaconejos</td><td>Chinchón</td>
+            <td class="num-col">1</td><td class="num-col">1.000</td>
+            <td class="num-col">1.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <!-- Fuenlabrada -->
+          <tr class="ratio-alto-row">
+            <td>Fuenlabrada</td><td>Fuenlabrada</td>
+            <td class="num-col">11</td><td class="num-col">190.800</td>
+            <td class="num-col ratio-alto">17.345</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.7% * 2)"></div>11,7 %</div></td>
+          </tr>
+          <!-- Getafe -->
+          <tr>
+            <td>Getafe</td><td>Getafe</td>
+            <td class="num-col">14</td><td class="num-col">187.000</td>
+            <td class="num-col">13.357</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.5% * 2)"></div>11,5 %</div></td>
+          </tr>
+          <!-- Griñón -->
+          <tr>
+            <td>Arroyomolinos</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">14.500</td>
+            <td class="num-col">14.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.9% * 2)"></div>0,9 %</div></td>
+          </tr>
+          <tr>
+            <td>Batres</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">1.900</td>
+            <td class="num-col">1.900</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Casarrubuelos</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">2.800</td>
+            <td class="num-col">2.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Cubas de la Sagra</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">5.500</td>
+            <td class="num-col">5.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.3% * 2)"></div>0,3 %</div></td>
+          </tr>
+          <tr>
+            <td>Griñón</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">3.800</td>
+            <td class="num-col">3.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Humanes de Madrid</td><td>Griñón</td>
+            <td class="num-col">2</td><td class="num-col">23.500</td>
+            <td class="num-col">11.750</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.4% * 2)"></div>1,4 %</div></td>
+          </tr>
+          <tr>
+            <td>Moraleja de Enmedio</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">5.000</td>
+            <td class="num-col">5.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.3% * 2)"></div>0,3 %</div></td>
+          </tr>
+          <tr>
+            <td>Serranillos del Valle</td><td>Griñón</td>
+            <td class="num-col">1</td><td class="num-col">1.600</td>
+            <td class="num-col">1.600</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <!-- Leganés -->
+          <tr>
+            <td>Leganés</td><td>Leganés</td>
+            <td class="num-col">16</td><td class="num-col">191.000</td>
+            <td class="num-col">11.937</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(11.8% * 2)"></div>11,8 %</div></td>
+          </tr>
+          <!-- Móstoles -->
+          <tr class="ratio-alto-row">
+            <td>Móstoles</td><td>Móstoles</td>
+            <td class="num-col">11</td><td class="num-col">211.000</td>
+            <td class="num-col ratio-alto">19.181</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(13.0% * 2)"></div>13,0 %</div></td>
+          </tr>
+          <!-- Navalcarnero -->
+          <tr>
+            <td>Aldea del Fresno</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">3.600</td>
+            <td class="num-col">3.600</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>El Álamo</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">10.000</td>
+            <td class="num-col">10.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.6% * 2)"></div>0,6 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Navalcarnero</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">31.000</td>
+            <td class="num-col ratio-alto">31.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.9% * 2)"></div>1,9 %</div></td>
+          </tr>
+          <tr>
+            <td>Sevilla la Nueva</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">8.500</td>
+            <td class="num-col">8.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.5% * 2)"></div>0,5 %</div></td>
+          </tr>
+          <tr>
+            <td>Villa del Prado</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">6.800</td>
+            <td class="num-col">6.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.4% * 2)"></div>0,4 %</div></td>
+          </tr>
+          <tr>
+            <td>Villamanta</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">3.400</td>
+            <td class="num-col">3.400</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Villamantilla</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">2.700</td>
+            <td class="num-col">2.700</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Villanueva de Perales</td><td>Navalcarnero</td>
+            <td class="num-col">1</td><td class="num-col">3.200</td>
+            <td class="num-col">3.200</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <!-- Parla -->
+          <tr class="ratio-alto-row">
+            <td>Parla</td><td>Parla</td>
+            <td class="num-col">6</td><td class="num-col">130.800</td>
+            <td class="num-col ratio-alto">21.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(8.1% * 2)"></div>8,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Torrejón de Velasco</td><td>Parla</td>
+            <td class="num-col">1</td><td class="num-col">8.500</td>
+            <td class="num-col">8.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.5% * 2)"></div>0,5 %</div></td>
+          </tr>
+          <tr>
+            <td>Torrejón de la Calzada</td><td>Parla</td>
+            <td class="num-col">1</td><td class="num-col">9.500</td>
+            <td class="num-col">9.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.6% * 2)"></div>0,6 %</div></td>
+          </tr>
+          <!-- San Martín de Valdeiglesias -->
+          <tr>
+            <td>Cadalso de los Vidrios</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">3.800</td>
+            <td class="num-col">3.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Cenicientos</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">2.400</td>
+            <td class="num-col">2.400</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Chapinería</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">2.000</td>
+            <td class="num-col">2.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Colmenar del Arroyo</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">1.700</td>
+            <td class="num-col">1.700</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Navas del Rey</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">2.500</td>
+            <td class="num-col">2.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Pelayos de la Presa</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">2.100</td>
+            <td class="num-col">2.100</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Rozas de Puerto Real</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">1.800</td>
+            <td class="num-col">1.800</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.1% * 2)"></div>0,1 %</div></td>
+          </tr>
+          <tr>
+            <td>San Martín de Valdeiglesias</td><td>San Martín de Valdeiglesias</td>
+            <td class="num-col">1</td><td class="num-col">8.100</td>
+            <td class="num-col">8.100</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.5% * 2)"></div>0,5 %</div></td>
+          </tr>
+          <!-- Valdemoro -->
+          <tr class="ratio-alto-row">
+            <td>Ciempozuelos</td><td>Valdemoro</td>
+            <td class="num-col">1</td><td class="num-col">22.000</td>
+            <td class="num-col ratio-alto">22.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.4% * 2)"></div>1,4 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Pinto</td><td>Valdemoro</td>
+            <td class="num-col">3</td><td class="num-col">53.500</td>
+            <td class="num-col ratio-alto">17.833</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(3.3% * 2)"></div>3,3 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>San Martín de la Vega</td><td>Valdemoro</td>
+            <td class="num-col">1</td><td class="num-col">23.500</td>
+            <td class="num-col ratio-alto">23.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.4% * 2)"></div>1,4 %</div></td>
+          </tr>
+          <tr>
+            <td>Titulcia</td><td>Valdemoro</td>
+            <td class="num-col">1</td><td class="num-col">700</td>
+            <td class="num-col">700</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:1px"></div>0,0 %</div></td>
+          </tr>
+          <tr class="ratio-alto-row">
+            <td>Valdemoro</td><td>Valdemoro</td>
+            <td class="num-col">4</td><td class="num-col">80.000</td>
+            <td class="num-col ratio-alto">20.000</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(4.9% * 2)"></div>4,9 %</div></td>
+          </tr>
+          <!-- Villaviciosa de Odón -->
+          <tr class="ratio-alto-row">
+            <td>Boadilla del Monte</td><td>Villaviciosa de Odón</td>
+            <td class="num-col">3</td><td class="num-col">53.000</td>
+            <td class="num-col ratio-alto">17.666</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(3.3% * 2)"></div>3,3 %</div></td>
+          </tr>
+          <tr>
+            <td>Brunete</td><td>Villaviciosa de Odón</td>
+            <td class="num-col">1</td><td class="num-col">11.500</td>
+            <td class="num-col">11.500</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.7% * 2)"></div>0,7 %</div></td>
+          </tr>
+          <tr>
+            <td>Quijorna</td><td>Villaviciosa de Odón</td>
+            <td class="num-col">1</td><td class="num-col">2.600</td>
+            <td class="num-col">2.600</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(0.2% * 2)"></div>0,2 %</div></td>
+          </tr>
+          <tr>
+            <td>Villanueva de la Cañada</td><td>Villaviciosa de Odón</td>
+            <td class="num-col">3</td><td class="num-col">18.500</td>
+            <td class="num-col">6.166</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.1% * 2)"></div>1,1 %</div></td>
+          </tr>
+          <tr>
+            <td>Villaviciosa de Odón</td><td>Villaviciosa de Odón</td>
+            <td class="num-col">2</td><td class="num-col">29.500</td>
+            <td class="num-col">14.750</td>
+            <td><div class="barra-wrap"><div class="barra" style="width:calc(1.8% * 2)"></div>1,8 %</div></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2"><strong>TOTAL DIÓCESIS</strong></td>
+            <td class="num-col">127</td>
+            <td class="num-col">1.624.800</td>
+            <td class="num-col">12.793</td>
+            <td>100 %</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="notas">
+      <p>• <strong>Habitantes:</strong> INE, Padrón Municipal 2023 (datos aproximados).</p>
+      <p>• <strong>Media diocesana:</strong> 1 parroquia por cada 12.793 habitantes.</p>
+      <p>• <span class="leyenda-alerta"></span>Municipios con ratio superior a 15.000 hab./parroquia: posible necesidad de refuerzo pastoral.</p>
+      <p>• Informe generado: 19/05/2026. Fuente parroquias: <em>Guía Diocesana, enero 2026</em>.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, IECM, INE</p>
+  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+</footer>
+
+<script>
+  function mostrarPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+    document.getElementById('panel-' + id).classList.add('activo');
+    btn.classList.add('activo');
+  }
+</script>
+
+</body>
+</html>
