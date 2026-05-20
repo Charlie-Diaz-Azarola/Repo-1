@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grupos de edad · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --borgoña:        #6B1A1A;
+    --borgoña-oscuro: #4E1212;
+    --dorado:         #C4A24B;
+    --dorado-claro:   #EAD898;
+    --fondo:          #F7F3EE;
+    --blanco:         #FFFFFF;
+    --gris-claro:     #F0EBE3;
+    --gris-borde:     #D6CCBf;
+    --texto:          #2C2118;
+    --texto-suave:    #6B5B4E;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--fondo); color: var(--texto); font-size: 15px; line-height: 1.6; }
+
+  header {
+    background: linear-gradient(135deg, var(--borgoña-oscuro) 0%, var(--borgoña) 100%);
+    color: var(--blanco); padding: 2rem 2rem 1.6rem; text-align: center;
+    border-bottom: 4px solid var(--dorado);
+  }
+  header .escudo { font-size: 2rem; margin-bottom: 0.3rem; opacity: 0.9; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; letter-spacing: 0.02em; margin-bottom: 0.25rem; }
+  header p.subtitulo { font-size: 0.85rem; opacity: 0.8; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── NAV ENTRE PÁGINAS ── */
+  .nav-pages {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+    padding: 0.7rem 2rem; background: var(--borgoña-oscuro);
+  }
+  .nav-link {
+    color: var(--dorado-claro); text-decoration: none; font-size: 0.82rem;
+    font-weight: 600; padding: 0.35rem 1.1rem; border-radius: 4px;
+    transition: all 0.18s; letter-spacing: 0.04em; border: 1px solid transparent;
+  }
+  .nav-link:hover { background: rgba(196,162,75,0.2); border-color: var(--dorado); }
+  .nav-link.activo { background: var(--dorado); color: var(--borgoña-oscuro); }
+
+  /* ── RESUMEN ── */
+  .resumen {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    padding: 1.5rem 2rem; background: var(--blanco); border-bottom: 1px solid var(--gris-borde);
+  }
+  .stat { text-align: center; min-width: 110px; }
+  .stat .num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--borgoña); line-height: 1; }
+  .stat .etiq { font-size: 0.72rem; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+  .sep { width: 1px; background: var(--gris-borde); align-self: stretch; }
+
+  /* ── FILTRO ── */
+  .filtro-bar {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    padding: 1.2rem 0; margin-bottom: 1rem;
+  }
+  .filtro-bar label { font-size: 0.85rem; font-weight: 600; color: var(--texto-suave); }
+  .filtro-bar select {
+    padding: 0.4rem 0.8rem; border: 1px solid var(--gris-borde); border-radius: 4px;
+    font-family: 'Inter', sans-serif; font-size: 0.85rem; background: var(--blanco);
+    color: var(--texto); cursor: pointer;
+  }
+  .filtro-bar select:focus { outline: 2px solid var(--dorado); }
+
+  /* ── PESTAÑAS ── */
+  .tabs { display: flex; padding: 1.5rem 0 0; }
+  .tab-btn {
+    padding: 0.6rem 1.6rem; border: 1px solid var(--gris-borde); background: var(--gris-claro);
+    color: var(--texto-suave); font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .tab-btn:first-child { border-radius: 6px 0 0 0; }
+  .tab-btn:last-child  { border-radius: 0 6px 0 0; border-left: none; }
+  .tab-btn.activo { background: var(--blanco); color: var(--borgoña); border-bottom-color: var(--blanco); border-top: 2px solid var(--borgoña); }
+  .tab-btn:hover:not(.activo) { background: var(--dorado-claro); }
+  .panel { display: none; background: var(--blanco); border: 1px solid var(--gris-borde); border-top: none; border-radius: 0 0 8px 8px; padding: 1.5rem; }
+  .panel.activo { display: block; }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+  .seccion-titulo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--borgoña); margin: 1.5rem 0 0.3rem; }
+  .seccion-desc { font-size: 0.83rem; color: var(--texto-suave); margin-bottom: 1.2rem; }
+
+  /* ── TABLA ── */
+  .tabla-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead th {
+    background: var(--borgoña); color: var(--blanco); padding: 0.65rem 0.85rem;
+    text-align: left; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; position: sticky; top: 0;
+  }
+  thead th.num { text-align: right; }
+  thead th.cen { text-align: center; }
+  tbody tr:nth-child(even) { background: var(--gris-claro); }
+  tbody tr:hover { background: var(--dorado-claro); transition: background 0.15s; }
+  tbody td { padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--gris-borde); }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tfoot tr { border-top: 2px solid var(--borgoña); }
+  tfoot td { padding: 0.6rem 0.85rem; font-weight: 700; background: var(--gris-claro); }
+  tfoot td.num { text-align: right; }
+
+  /* Separador de arciprestazgo */
+  tr.arc-sep td {
+    background: var(--borgoña); color: var(--blanco); font-weight: 700;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+  }
+
+  /* Ratio alto */
+  tr.ratio-alto td.ratio { color: #9B1C1C; font-weight: 700; }
+
+  /* Barra mini */
+  .barra-wrap { display: flex; align-items: center; gap: 0.4rem; }
+  .barra { height: 7px; background: var(--borgoña); border-radius: 3px; opacity: 0.65; min-width: 2px; }
+
+  /* Indicadores */
+  .ind-alto65 { background: #FDECEA !important; }
+  .ind-bajo15 { background: #FDECEA !important; }
+  .ind-ok65   { background: #EBF7E6 !important; }
+  .ind-ok15   { background: #EBF7E6 !important; }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 10px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .badge-rojo  { background: #FDECEA; color: #9B1C1C; }
+  .badge-verde { background: #EBF7E6; color: #276221; }
+  .badge-neutro{ background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* Año dato */
+  .chip-anio {
+    display: inline-block; font-size: 0.72rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle;
+  }
+  .chip-2022 { background: #E3F0FB; color: #1A5276; }
+  .chip-2019 { background: #FEF9E7; color: #7D6608; }
+  .chip-sd   { background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* ── NOTAS ── */
+  .notas {
+    margin-top: 1.4rem; padding: 0.9rem 1.1rem; background: var(--gris-claro);
+    border-left: 3px solid var(--dorado); border-radius: 0 6px 6px 0;
+    font-size: 0.8rem; color: var(--texto-suave);
+  }
+  .notas p { margin-bottom: 0.25rem; }
+  .notas p:last-child { margin-bottom: 0; }
+
+  /* ── PIE ── */
+  footer {
+    text-align: center; padding: 1.4rem 2rem; font-size: 0.76rem;
+    color: var(--texto-suave); border-top: 1px solid var(--gris-borde); margin-top: 2rem;
+  }
+  footer a { color: var(--borgoña); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.35rem; }
+    .stat .num { font-size: 1.5rem; }
+    main { padding: 0 0.75rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="escudo">✝</div>
+  <h1>Población Diocesana</h1>
+  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+</header>
+
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link">Inicio</a>
+    <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+    <a href="grupos-edad.html" class="nav-link activo">Grupos de edad</a>
+    <a href="indicadores.html" class="nav-link">Indicadores</a>
+</nav>
+
+
+<div class="resumen">
+  <div class="stat"><div class="num">13</div><div class="etiq">Arciprestazgos</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">127</div><div class="etiq">Parroquias</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">48</div><div class="etiq">Municipios</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">1,71 M</div><div class="etiq">Habitantes (2025)</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">13.473</div><div class="etiq">Hab. / parroquia</div></div>
+</div>
+
+<main>
+
+  <h2 class="seccion-titulo">Distribución por Grupos de Edad</h2>
+  <p class="seccion-desc">Fuente: INE · Estadística del Padrón Continuo (tabla 33842, 2022) y tabla PC-AXIS (2019)</p>
+
+  <div class="tabs">
+    <button class="tab-btn activo" onclick="mostrarPanel('total',this)">Población total</button>
+    <button class="tab-btn" onclick="mostrarPanel('hm',this)">Hombres / Mujeres</button>
+  </div>
+
+  <div id="panel-total" class="panel activo">
+    <p class="seccion-desc" style="margin-bottom:0.8rem;">
+      Grupos quinquenales (Total, ambos sexos).
+      <span class="chip-anio chip-2022">2022</span> dato definitivo INE &nbsp;
+      <span class="chip-anio chip-2019">2019</span> dato PC-AXIS (municipios pequeños)
+    </p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Municipio</th>
+            <th class="num">Total</th>
+            <th class="num">0-4</th><th class="num">5-9</th><th class="num">10-14</th><th class="num">15-19</th><th class="num">20-24</th><th class="num">25-29</th><th class="num">30-34</th><th class="num">35-39</th><th class="num">40-44</th><th class="num">45-49</th><th class="num">50-54</th><th class="num">55-59</th><th class="num">60-64</th><th class="num">65-69</th><th class="num">70-74</th><th class="num">75-79</th><th class="num">80-84</th><th class="num">85-89</th><th class="num">90-94</th><th class="num">95-99</th><th class="num">100+</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Alcorcón</td></tr>
+<tr>
+        <td>Alcorcón <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">170.296</td>
+        <td class="num">6272</td><td class="num">8208</td><td class="num">9021</td><td class="num">9314</td><td class="num">8261</td><td class="num">7535</td><td class="num">8097</td><td class="num">10.258</td><td class="num">14.248</td><td class="num">16.678</td><td class="num">14.397</td><td class="num">10.921</td><td class="num">8290</td><td class="num">8026</td><td class="num">10.324</td><td class="num">9980</td><td class="num">5679</td><td class="num">3164</td><td class="num">1212</td><td class="num">351</td><td class="num">60</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Aranjuez</td></tr>
+<tr>
+        <td>Aranjuez <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">59.762</td>
+        <td class="num">2569</td><td class="num">3306</td><td class="num">3887</td><td class="num">3443</td><td class="num">3212</td><td class="num">3146</td><td class="num">3254</td><td class="num">3943</td><td class="num">4972</td><td class="num">5305</td><td class="num">4724</td><td class="num">4124</td><td class="num">3532</td><td class="num">2828</td><td class="num">2498</td><td class="num">2039</td><td class="num">1335</td><td class="num">1017</td><td class="num">496</td><td class="num">117</td><td class="num">15</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Chinchón</td></tr>
+<tr>
+        <td>Chinchón <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">5331</td>
+        <td class="num">230</td><td class="num">272</td><td class="num">263</td><td class="num">248</td><td class="num">272</td><td class="num">288</td><td class="num">317</td><td class="num">395</td><td class="num">437</td><td class="num">416</td><td class="num">450</td><td class="num">385</td><td class="num">345</td><td class="num">255</td><td class="num">230</td><td class="num">175</td><td class="num">141</td><td class="num">135</td><td class="num">64</td><td class="num">12</td><td class="num">1</td>
+      </tr>
+<tr>
+        <td>Colmenar de Oreja <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">8032</td>
+        <td class="num">321</td><td class="num">408</td><td class="num">455</td><td class="num">455</td><td class="num">403</td><td class="num">422</td><td class="num">443</td><td class="num">566</td><td class="num">717</td><td class="num">677</td><td class="num">689</td><td class="num">580</td><td class="num">516</td><td class="num">418</td><td class="num">400</td><td class="num">309</td><td class="num">233</td><td class="num">156</td><td class="num">106</td><td class="num">22</td><td class="num">5</td>
+      </tr>
+<tr>
+        <td>Belmonte de Tajo <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1664</td>
+        <td class="num">76</td><td class="num">91</td><td class="num">75</td><td class="num">80</td><td class="num">79</td><td class="num">100</td><td class="num">113</td><td class="num">162</td><td class="num">140</td><td class="num">127</td><td class="num">118</td><td class="num">114</td><td class="num">112</td><td class="num">77</td><td class="num">56</td><td class="num">50</td><td class="num">36</td><td class="num">37</td><td class="num">20</td><td class="num">1</td><td class="num">0</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Fuenlabrada</td></tr>
+<tr>
+        <td>Fuenlabrada <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">186.382</td>
+        <td class="num">7332</td><td class="num">9079</td><td class="num">10.711</td><td class="num">11.106</td><td class="num">10.570</td><td class="num">10.025</td><td class="num">11.416</td><td class="num">13.700</td><td class="num">16.245</td><td class="num">15.600</td><td class="num">15.548</td><td class="num">13.756</td><td class="num">14.320</td><td class="num">13.643</td><td class="num">7704</td><td class="num">4227</td><td class="num">2246</td><td class="num">1649</td><td class="num">774</td><td class="num">209</td><td class="num">31</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Getafe</td></tr>
+<tr>
+        <td>Getafe <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">189.906</td>
+        <td class="num">8668</td><td class="num">9938</td><td class="num">9854</td><td class="num">9266</td><td class="num">8508</td><td class="num">8798</td><td class="num">10.574</td><td class="num">13.436</td><td class="num">16.156</td><td class="num">17.286</td><td class="num">14.269</td><td class="num">11.032</td><td class="num">10.062</td><td class="num">9052</td><td class="num">9831</td><td class="num">9033</td><td class="num">4669</td><td class="num">2755</td><td class="num">1085</td><td class="num">268</td><td class="num">51</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Griñón</td></tr>
+<tr>
+        <td>Arroyomolinos <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">34.833</td>
+        <td class="num">2303</td><td class="num">3327</td><td class="num">2976</td><td class="num">2257</td><td class="num">1480</td><td class="num">1197</td><td class="num">1681</td><td class="num">3088</td><td class="num">4684</td><td class="num">4076</td><td class="num">2604</td><td class="num">1677</td><td class="num">1124</td><td class="num">918</td><td class="num">667</td><td class="num">399</td><td class="num">192</td><td class="num">112</td><td class="num">54</td><td class="num">16</td><td class="num">1</td>
+      </tr>
+<tr>
+        <td>Batres <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1684</td>
+        <td class="num">69</td><td class="num">76</td><td class="num">106</td><td class="num">106</td><td class="num">87</td><td class="num">70</td><td class="num">84</td><td class="num">106</td><td class="num">136</td><td class="num">193</td><td class="num">171</td><td class="num">134</td><td class="num">98</td><td class="num">98</td><td class="num">66</td><td class="num">32</td><td class="num">24</td><td class="num">17</td><td class="num">8</td><td class="num">2</td><td class="num">1</td>
+      </tr>
+<tr>
+        <td>Casarrubuelos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">3778</td>
+        <td class="num">204</td><td class="num">275</td><td class="num">273</td><td class="num">228</td><td class="num">169</td><td class="num">177</td><td class="num">225</td><td class="num">357</td><td class="num">440</td><td class="num">386</td><td class="num">264</td><td class="num">225</td><td class="num">193</td><td class="num">145</td><td class="num">100</td><td class="num">54</td><td class="num">26</td><td class="num">22</td><td class="num">11</td><td class="num">4</td><td class="num">0</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Leganés</td></tr>
+<tr>
+        <td>Leganés <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">194.084</td>
+        <td class="num">6766</td><td class="num">9074</td><td class="num">10.207</td><td class="num">9270</td><td class="num">8701</td><td class="num">9209</td><td class="num">9894</td><td class="num">11.414</td><td class="num">15.683</td><td class="num">17.353</td><td class="num">14.349</td><td class="num">11.954</td><td class="num">10.406</td><td class="num">9486</td><td class="num">12.084</td><td class="num">10.037</td><td class="num">5698</td><td class="num">3386</td><td class="num">1319</td><td class="num">299</td><td class="num">71</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Móstoles</td></tr>
+<tr>
+        <td>Móstoles <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">214.006</td>
+        <td class="num">8566</td><td class="num">10.207</td><td class="num">10.461</td><td class="num">9662</td><td class="num">9464</td><td class="num">10.369</td><td class="num">12.624</td><td class="num">15.707</td><td class="num">19.076</td><td class="num">17.266</td><td class="num">13.664</td><td class="num">13.028</td><td class="num">12.849</td><td class="num">14.377</td><td class="num">14.352</td><td class="num">8748</td><td class="num">4186</td><td class="num">2576</td><td class="num">1156</td><td class="num">358</td><td class="num">65</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Navalcarnero</td></tr>
+<tr>
+        <td>Aldea del Fresno <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">3227</td>
+        <td class="num">161</td><td class="num">168</td><td class="num">180</td><td class="num">158</td><td class="num">123</td><td class="num">153</td><td class="num">206</td><td class="num">236</td><td class="num">269</td><td class="num">294</td><td class="num">234</td><td class="num">220</td><td class="num">195</td><td class="num">163</td><td class="num">140</td><td class="num">123</td><td class="num">77</td><td class="num">84</td><td class="num">32</td><td class="num">10</td><td class="num">1</td>
+      </tr>
+<tr>
+        <td>El Álamo <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">10.123</td>
+        <td class="num">430</td><td class="num">564</td><td class="num">625</td><td class="num">632</td><td class="num">517</td><td class="num">523</td><td class="num">562</td><td class="num">658</td><td class="num">832</td><td class="num">873</td><td class="num">855</td><td class="num">650</td><td class="num">511</td><td class="num">418</td><td class="num">371</td><td class="num">331</td><td class="num">267</td><td class="num">262</td><td class="num">169</td><td class="num">65</td><td class="num">8</td>
+      </tr>
+<tr>
+        <td>Villamantilla <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1289</td>
+        <td class="num">61</td><td class="num">85</td><td class="num">76</td><td class="num">73</td><td class="num">77</td><td class="num">99</td><td class="num">120</td><td class="num">148</td><td class="num">163</td><td class="num">127</td><td class="num">119</td><td class="num">91</td><td class="num">59</td><td class="num">29</td><td class="num">23</td><td class="num">13</td><td class="num">11</td><td class="num">8</td><td class="num">4</td><td class="num">1</td><td class="num">0</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Parla</td></tr>
+<tr>
+        <td>Parla <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">133.916</td>
+        <td class="num">6608</td><td class="num">8854</td><td class="num">9544</td><td class="num">6970</td><td class="num">6630</td><td class="num">7387</td><td class="num">9009</td><td class="num">12.505</td><td class="num">13.961</td><td class="num">10.673</td><td class="num">8097</td><td class="num">6342</td><td class="num">5706</td><td class="num">3941</td><td class="num">2956</td><td class="num">1537</td><td class="num">889</td><td class="num">390</td><td class="num">85</td><td class="num">19</td><td class="num">—</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de San Martín de Valdeiglesias</td></tr>
+<tr>
+        <td>Cadalso de los Vidrios <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">3039</td>
+        <td class="num">149</td><td class="num">152</td><td class="num">143</td><td class="num">152</td><td class="num">150</td><td class="num">167</td><td class="num">193</td><td class="num">221</td><td class="num">226</td><td class="num">226</td><td class="num">231</td><td class="num">193</td><td class="num">183</td><td class="num">174</td><td class="num">167</td><td class="num">102</td><td class="num">74</td><td class="num">86</td><td class="num">34</td><td class="num">13</td><td class="num">3</td>
+      </tr>
+<tr>
+        <td>Cenicientos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">2033</td>
+        <td class="num">76</td><td class="num">87</td><td class="num">88</td><td class="num">90</td><td class="num">111</td><td class="num">115</td><td class="num">119</td><td class="num">128</td><td class="num">140</td><td class="num">112</td><td class="num">143</td><td class="num">165</td><td class="num">130</td><td class="num">101</td><td class="num">103</td><td class="num">90</td><td class="num">91</td><td class="num">81</td><td class="num">51</td><td class="num">9</td><td class="num">3</td>
+      </tr>
+<tr>
+        <td>Chapinería <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">2328</td>
+        <td class="num">122</td><td class="num">150</td><td class="num">161</td><td class="num">98</td><td class="num">106</td><td class="num">109</td><td class="num">108</td><td class="num">165</td><td class="num">216</td><td class="num">198</td><td class="num">189</td><td class="num">179</td><td class="num">121</td><td class="num">85</td><td class="num">83</td><td class="num">70</td><td class="num">73</td><td class="num">58</td><td class="num">27</td><td class="num">8</td><td class="num">2</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Valdemoro</td></tr>
+<tr>
+        <td>Valdemoro <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">70.428</td>
+        <td class="num">3331</td><td class="num">5181</td><td class="num">6293</td><td class="num">5625</td><td class="num">4269</td><td class="num">3803</td><td class="num">4617</td><td class="num">6616</td><td class="num">8840</td><td class="num">8461</td><td class="num">6128</td><td class="num">4256</td><td class="num">2996</td><td class="num">2312</td><td class="num">1763</td><td class="num">1301</td><td class="num">863</td><td class="num">510</td><td class="num">138</td><td class="num">23</td><td class="num">2</td>
+      </tr>
+<tr>
+        <td>Ciempozuelos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">24.592</td>
+        <td class="num">1281</td><td class="num">1485</td><td class="num">1436</td><td class="num">1246</td><td class="num">1216</td><td class="num">1412</td><td class="num">1593</td><td class="num">2070</td><td class="num">2547</td><td class="num">2172</td><td class="num">1914</td><td class="num">1568</td><td class="num">1257</td><td class="num">901</td><td class="num">809</td><td class="num">562</td><td class="num">514</td><td class="num">373</td><td class="num">192</td><td class="num">39</td><td class="num">5</td>
+      </tr>
+<tr>
+        <td>Pinto <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">55.711</td>
+        <td class="num">2540</td><td class="num">3292</td><td class="num">3581</td><td class="num">3152</td><td class="num">2572</td><td class="num">2569</td><td class="num">3306</td><td class="num">3861</td><td class="num">5486</td><td class="num">5623</td><td class="num">4359</td><td class="num">3497</td><td class="num">2717</td><td class="num">2167</td><td class="num">1875</td><td class="num">1336</td><td class="num">797</td><td class="num">461</td><td class="num">261</td><td class="num">69</td><td class="num">9</td>
+      </tr>
+<tr>
+        <td>San Martín de la Vega <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">6518</td>
+        <td class="num">429</td><td class="num">447</td><td class="num">411</td><td class="num">314</td><td class="num">341</td><td class="num">382</td><td class="num">509</td><td class="num">651</td><td class="num">801</td><td class="num">664</td><td class="num">539</td><td class="num">447</td><td class="num">361</td><td class="num">263</td><td class="num">219</td><td class="num">158</td><td class="num">127</td><td class="num">76</td><td class="num">39</td><td class="num">11</td><td class="num">3</td>
+      </tr>
+<tr class="arc-sep"><td colspan="24">Arciprestazgo de Villaviciosa de Odón</td></tr>
+<tr>
+        <td>Boadilla del Monte <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">62.628</td>
+        <td class="num">3169</td><td class="num">4304</td><td class="num">5363</td><td class="num">5497</td><td class="num">3485</td><td class="num">2495</td><td class="num">2420</td><td class="num">3517</td><td class="num">5102</td><td class="num">6797</td><td class="num">6468</td><td class="num">4197</td><td class="num">2817</td><td class="num">1879</td><td class="num">1845</td><td class="num">1450</td><td class="num">856</td><td class="num">580</td><td class="num">290</td><td class="num">85</td><td class="num">11</td>
+      </tr>
+<tr>
+        <td>Brunete <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">10.736</td>
+        <td class="num">534</td><td class="num">675</td><td class="num">776</td><td class="num">639</td><td class="num">610</td><td class="num">527</td><td class="num">630</td><td class="num">814</td><td class="num">1110</td><td class="num">1047</td><td class="num">941</td><td class="num">674</td><td class="num">457</td><td class="num">377</td><td class="num">334</td><td class="num">213</td><td class="num">172</td><td class="num">118</td><td class="num">70</td><td class="num">17</td><td class="num">1</td>
+      </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notas">
+      <p>• Grupos de edad quinquenales de 0-4 hasta 100+ años. Total = suma de todos los grupos.</p>
+      <p>• Los totales por sexo de cada municipio (2025) están en la página <a href="poblacion-2025.html" style="color:var(--borgoña)">Población 2025</a>.</p>
+    </div>
+  </div>
+
+  <div id="panel-hm" class="panel">
+    <p class="seccion-desc" style="margin-bottom:0.8rem;">
+      Desglose por sexo disponible solo para los 9 municipios más grandes (dato 2022, INE tabla 33842).
+    </p>
+    <div class="tabla-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">Municipio</th>
+            <th class="num hcol" colspan="22" style="background:#1A3A6B">Hombres</th>
+            <th class="num mcol" colspan="22" style="background:#7B2512">Mujeres</th>
+          </tr>
+          <tr>
+            <th class="num hcol" style="background:#2257A8">Total H</th>
+            <th class="num hcol" style="background:#2257A8;font-size:0.75rem">0-4</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">5-9</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">10-14</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">15-19</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">20-24</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">25-29</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">30-34</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">35-39</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">40-44</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">45-49</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">50-54</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">55-59</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">60-64</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">65-69</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">70-74</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">75-79</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">80-84</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">85-89</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">90-94</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">95-99</th><th class="num hcol" style="background:#2257A8;font-size:0.75rem">100+</th>
+            <th class="num mcol" style="background:#A0320A">Total M</th>
+            <th class="num mcol" style="background:#A0320A;font-size:0.75rem">0-4</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">5-9</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">10-14</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">15-19</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">20-24</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">25-29</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">30-34</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">35-39</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">40-44</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">45-49</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">50-54</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">55-59</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">60-64</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">65-69</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">70-74</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">75-79</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">80-84</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">85-89</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">90-94</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">95-99</th><th class="num mcol" style="background:#A0320A;font-size:0.75rem">100+</th>
+          </tr>
+        </thead>
+        <tbody>
+<tr>
+      <td>Alcorcón</td>
+      <td class="num hcol"><strong>81.779</strong></td>
+      <td class="num hcol">3204</td><td class="num hcol">4020</td><td class="num hcol">4398</td><td class="num hcol">4503</td><td class="num hcol">3974</td><td class="num hcol">3788</td><td class="num hcol">4142</td><td class="num hcol">5243</td><td class="num hcol">7222</td><td class="num hcol">8441</td><td class="num hcol">7332</td><td class="num hcol">5643</td><td class="num hcol">4402</td><td class="num hcol">4689</td><td class="num hcol">6002</td><td class="num hcol">5594</td><td class="num hcol">3121</td><td class="num hcol">1897</td><td class="num hcol">834</td><td class="num hcol">262</td><td class="num hcol">48</td>
+      <td class="num mcol"><strong>88.517</strong></td>
+      <td class="num mcol">3068</td><td class="num mcol">4188</td><td class="num mcol">4623</td><td class="num mcol">4811</td><td class="num mcol">4287</td><td class="num mcol">3747</td><td class="num mcol">3955</td><td class="num mcol">5015</td><td class="num mcol">7026</td><td class="num mcol">8237</td><td class="num mcol">7065</td><td class="num mcol">5278</td><td class="num mcol">3888</td><td class="num mcol">3337</td><td class="num mcol">4322</td><td class="num mcol">4386</td><td class="num mcol">2558</td><td class="num mcol">1267</td><td class="num mcol">378</td><td class="num mcol">89</td><td class="num mcol">12</td>
+    </tr>
+<tr>
+      <td>Fuenlabrada</td>
+      <td class="num hcol"><strong>89.344</strong></td>
+      <td class="num hcol">3862</td><td class="num hcol">4661</td><td class="num hcol">5533</td><td class="num hcol">5673</td><td class="num hcol">5445</td><td class="num hcol">5003</td><td class="num hcol">5737</td><td class="num hcol">6848</td><td class="num hcol">8026</td><td class="num hcol">7741</td><td class="num hcol">7504</td><td class="num hcol">6553</td><td class="num hcol">6356</td><td class="num hcol">6699</td><td class="num hcol">3872</td><td class="num hcol">1904</td><td class="num hcol">903</td><td class="num hcol">567</td><td class="num hcol">229</td><td class="num hcol">46</td><td class="num hcol">8</td>
+      <td class="num mcol"><strong>97.038</strong></td>
+      <td class="num mcol">3470</td><td class="num mcol">4418</td><td class="num mcol">5178</td><td class="num mcol">5433</td><td class="num mcol">5125</td><td class="num mcol">5022</td><td class="num mcol">5679</td><td class="num mcol">6852</td><td class="num mcol">8219</td><td class="num mcol">7859</td><td class="num mcol">8044</td><td class="num mcol">7203</td><td class="num mcol">7964</td><td class="num mcol">6944</td><td class="num mcol">3832</td><td class="num mcol">2323</td><td class="num mcol">1343</td><td class="num mcol">1082</td><td class="num mcol">545</td><td class="num mcol">163</td><td class="num mcol">23</td>
+    </tr>
+<tr>
+      <td>Getafe</td>
+      <td class="num hcol"><strong>92.760</strong></td>
+      <td class="num hcol">4174</td><td class="num hcol">4747</td><td class="num hcol">4732</td><td class="num hcol">4485</td><td class="num hcol">4102</td><td class="num hcol">4447</td><td class="num hcol">5430</td><td class="num hcol">6767</td><td class="num hcol">8083</td><td class="num hcol">8698</td><td class="num hcol">7105</td><td class="num hcol">5662</td><td class="num hcol">5031</td><td class="num hcol">4571</td><td class="num hcol">5653</td><td class="num hcol">4857</td><td class="num hcol">2549</td><td class="num hcol">1714</td><td class="num hcol">762</td><td class="num hcol">216</td><td class="num hcol">41</td>
+      <td class="num mcol"><strong>97.146</strong></td>
+      <td class="num mcol">4494</td><td class="num mcol">5191</td><td class="num mcol">5122</td><td class="num mcol">4781</td><td class="num mcol">4406</td><td class="num mcol">4351</td><td class="num mcol">5144</td><td class="num mcol">6669</td><td class="num mcol">8073</td><td class="num mcol">8588</td><td class="num mcol">7164</td><td class="num mcol">5370</td><td class="num mcol">5031</td><td class="num mcol">4481</td><td class="num mcol">4178</td><td class="num mcol">4176</td><td class="num mcol">2120</td><td class="num mcol">1041</td><td class="num mcol">323</td><td class="num mcol">52</td><td class="num mcol">10</td>
+    </tr>
+<tr>
+      <td>Leganés</td>
+      <td class="num hcol"><strong>92.296</strong></td>
+      <td class="num hcol">3449</td><td class="num hcol">4661</td><td class="num hcol">5223</td><td class="num hcol">4857</td><td class="num hcol">4435</td><td class="num hcol">4632</td><td class="num hcol">4938</td><td class="num hcol">5604</td><td class="num hcol">7763</td><td class="num hcol">8683</td><td class="num hcol">7097</td><td class="num hcol">5700</td><td class="num hcol">4947</td><td class="num hcol">3997</td><td class="num hcol">5238</td><td class="num hcol">4438</td><td class="num hcol">2556</td><td class="num hcol">1336</td><td class="num hcol">406</td><td class="num hcol">62</td><td class="num hcol">16</td>
+      <td class="num mcol"><strong>101.788</strong></td>
+      <td class="num mcol">3317</td><td class="num mcol">4413</td><td class="num mcol">4984</td><td class="num mcol">4413</td><td class="num mcol">4266</td><td class="num mcol">4577</td><td class="num mcol">4956</td><td class="num mcol">5810</td><td class="num mcol">7920</td><td class="num mcol">8670</td><td class="num mcol">7252</td><td class="num mcol">6254</td><td class="num mcol">5459</td><td class="num mcol">5489</td><td class="num mcol">6846</td><td class="num mcol">5599</td><td class="num mcol">3142</td><td class="num mcol">2050</td><td class="num mcol">913</td><td class="num mcol">237</td><td class="num mcol">55</td>
+    </tr>
+<tr>
+      <td>Móstoles</td>
+      <td class="num hcol"><strong>103.290</strong></td>
+      <td class="num hcol">4514</td><td class="num hcol">5243</td><td class="num hcol">5326</td><td class="num hcol">4969</td><td class="num hcol">4859</td><td class="num hcol">5261</td><td class="num hcol">6206</td><td class="num hcol">7819</td><td class="num hcol">9695</td><td class="num hcol">8867</td><td class="num hcol">6633</td><td class="num hcol">6064</td><td class="num hcol">5718</td><td class="num hcol">6260</td><td class="num hcol">6678</td><td class="num hcol">4064</td><td class="num hcol">1793</td><td class="num hcol">948</td><td class="num hcol">309</td><td class="num hcol">75</td><td class="num hcol">17</td>
+      <td class="num mcol"><strong>110.716</strong></td>
+      <td class="num mcol">4052</td><td class="num mcol">4964</td><td class="num mcol">5135</td><td class="num mcol">4693</td><td class="num mcol">4605</td><td class="num mcol">5108</td><td class="num mcol">6418</td><td class="num mcol">7888</td><td class="num mcol">9381</td><td class="num mcol">8399</td><td class="num mcol">7031</td><td class="num mcol">6964</td><td class="num mcol">7131</td><td class="num mcol">8117</td><td class="num mcol">7674</td><td class="num mcol">4684</td><td class="num mcol">2393</td><td class="num mcol">1628</td><td class="num mcol">847</td><td class="num mcol">283</td><td class="num mcol">48</td>
+    </tr>
+<tr>
+      <td>Parla</td>
+      <td class="num hcol"><strong>64.967</strong></td>
+      <td class="num hcol">3407</td><td class="num hcol">4629</td><td class="num hcol">4868</td><td class="num hcol">3444</td><td class="num hcol">3395</td><td class="num hcol">3929</td><td class="num hcol">4969</td><td class="num hcol">7232</td><td class="num hcol">6781</td><td class="num hcol">4640</td><td class="num hcol">3528</td><td class="num hcol">2832</td><td class="num hcol">2336</td><td class="num hcol">1313</td><td class="num hcol">652</td><td class="num hcol">1313</td><td class="num hcol">312</td><td class="num hcol">102</td><td class="num hcol">23</td><td class="num hcol">3</td><td class="num hcol">—</td>
+      <td class="num mcol"><strong>68.949</strong></td>
+      <td class="num mcol">3201</td><td class="num mcol">4225</td><td class="num mcol">4676</td><td class="num mcol">3526</td><td class="num mcol">3235</td><td class="num mcol">3458</td><td class="num mcol">4040</td><td class="num mcol">5273</td><td class="num mcol">7180</td><td class="num mcol">6033</td><td class="num mcol">4569</td><td class="num mcol">3510</td><td class="num mcol">3370</td><td class="num mcol">2628</td><td class="num mcol">1643</td><td class="num mcol">885</td><td class="num mcol">577</td><td class="num mcol">288</td><td class="num mcol">62</td><td class="num mcol">16</td><td class="num mcol">—</td>
+    </tr>
+<tr>
+      <td>Valdemoro</td>
+      <td class="num hcol"><strong>34.157</strong></td>
+      <td class="num hcol">1646</td><td class="num hcol">2569</td><td class="num hcol">3074</td><td class="num hcol">2691</td><td class="num hcol">2078</td><td class="num hcol">1813</td><td class="num hcol">2148</td><td class="num hcol">2712</td><td class="num hcol">4172</td><td class="num hcol">4750</td><td class="num hcol">3569</td><td class="num hcol">2465</td><td class="num hcol">1679</td><td class="num hcol">1139</td><td class="num hcol">913</td><td class="num hcol">680</td><td class="num hcol">404</td><td class="num hcol">261</td><td class="num hcol">81</td><td class="num hcol">13</td><td class="num hcol">1</td>
+      <td class="num mcol"><strong>36.271</strong></td>
+      <td class="num mcol">1685</td><td class="num mcol">2612</td><td class="num mcol">3219</td><td class="num mcol">2934</td><td class="num mcol">2191</td><td class="num mcol">1990</td><td class="num mcol">2469</td><td class="num mcol">3904</td><td class="num mcol">4668</td><td class="num mcol">3711</td><td class="num mcol">2559</td><td class="num mcol">1791</td><td class="num mcol">1317</td><td class="num mcol">1173</td><td class="num mcol">850</td><td class="num mcol">621</td><td class="num mcol">459</td><td class="num mcol">249</td><td class="num mcol">57</td><td class="num mcol">10</td><td class="num mcol">1</td>
+    </tr>
+<tr>
+      <td>Pinto</td>
+      <td class="num hcol"><strong>27.423</strong></td>
+      <td class="num hcol">1344</td><td class="num hcol">1662</td><td class="num hcol">1852</td><td class="num hcol">1607</td><td class="num hcol">1319</td><td class="num hcol">1233</td><td class="num hcol">1589</td><td class="num hcol">2147</td><td class="num hcol">2678</td><td class="num hcol">2887</td><td class="num hcol">2160</td><td class="num hcol">1742</td><td class="num hcol">1324</td><td class="num hcol">1022</td><td class="num hcol">901</td><td class="num hcol">602</td><td class="num hcol">331</td><td class="num hcol">237</td><td class="num hcol">77</td><td class="num hcol">10</td><td class="num hcol">2</td>
+      <td class="num mcol"><strong>28.288</strong></td>
+      <td class="num mcol">1196</td><td class="num mcol">1630</td><td class="num mcol">1729</td><td class="num mcol">1545</td><td class="num mcol">1253</td><td class="num mcol">1336</td><td class="num mcol">1717</td><td class="num mcol">2144</td><td class="num mcol">2743</td><td class="num mcol">2763</td><td class="num mcol">2199</td><td class="num mcol">1755</td><td class="num mcol">1393</td><td class="num mcol">974</td><td class="num mcol">734</td><td class="num mcol">734</td><td class="num mcol">466</td><td class="num mcol">390</td><td class="num mcol">184</td><td class="num mcol">59</td><td class="num mcol">7</td>
+    </tr>
+<tr>
+      <td>Boadilla del Monte</td>
+      <td class="num hcol"><strong>30.670</strong></td>
+      <td class="num hcol">1642</td><td class="num hcol">2214</td><td class="num hcol">2705</td><td class="num hcol">2811</td><td class="num hcol">1792</td><td class="num hcol">1261</td><td class="num hcol">1114</td><td class="num hcol">1605</td><td class="num hcol">2338</td><td class="num hcol">3243</td><td class="num hcol">3204</td><td class="num hcol">2158</td><td class="num hcol">1417</td><td class="num hcol">904</td><td class="num hcol">828</td><td class="num hcol">666</td><td class="num hcol">387</td><td class="num hcol">222</td><td class="num hcol">97</td><td class="num hcol">21</td><td class="num hcol">1</td>
+      <td class="num mcol"><strong>31.958</strong></td>
+      <td class="num mcol">1527</td><td class="num mcol">2090</td><td class="num mcol">2658</td><td class="num mcol">2686</td><td class="num mcol">1693</td><td class="num mcol">1234</td><td class="num mcol">1306</td><td class="num mcol">1912</td><td class="num mcol">2764</td><td class="num mcol">3554</td><td class="num mcol">3264</td><td class="num mcol">2039</td><td class="num mcol">1400</td><td class="num mcol">975</td><td class="num mcol">1017</td><td class="num mcol">784</td><td class="num mcol">469</td><td class="num mcol">358</td><td class="num mcol">193</td><td class="num mcol">64</td><td class="num mcol">10</td>
+    </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="notas">
+      <p>• Datos a 1 de enero de 2022 (último año disponible en INE tabla 33842). Fuente: INE / Anexos de Demografía Wikipedia ES.</p>
+      <p>• Los 9 municipios mostrados son aquellos para los que se dispone del desglose completo por sexo y grupo de edad.</p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
+  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+</footer>
+
+<style>
+    .hcol { background: #EBF2FB; }
+    .mcol { background: #FDECE8; }
+    tr.arc-sep td { background: var(--borgoña); }
+  </style>
+  <script>
+  function mostrarPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+    document.getElementById('panel-' + id).classList.add('activo');
+    btn.classList.add('activo');
+  }
+  </script>
+</body>
+</html>

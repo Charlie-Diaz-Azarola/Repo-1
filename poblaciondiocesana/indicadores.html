@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Indicadores · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --borgoña:        #6B1A1A;
+    --borgoña-oscuro: #4E1212;
+    --dorado:         #C4A24B;
+    --dorado-claro:   #EAD898;
+    --fondo:          #F7F3EE;
+    --blanco:         #FFFFFF;
+    --gris-claro:     #F0EBE3;
+    --gris-borde:     #D6CCBf;
+    --texto:          #2C2118;
+    --texto-suave:    #6B5B4E;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--fondo); color: var(--texto); font-size: 15px; line-height: 1.6; }
+
+  header {
+    background: linear-gradient(135deg, var(--borgoña-oscuro) 0%, var(--borgoña) 100%);
+    color: var(--blanco); padding: 2rem 2rem 1.6rem; text-align: center;
+    border-bottom: 4px solid var(--dorado);
+  }
+  header .escudo { font-size: 2rem; margin-bottom: 0.3rem; opacity: 0.9; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; letter-spacing: 0.02em; margin-bottom: 0.25rem; }
+  header p.subtitulo { font-size: 0.85rem; opacity: 0.8; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── NAV ENTRE PÁGINAS ── */
+  .nav-pages {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+    padding: 0.7rem 2rem; background: var(--borgoña-oscuro);
+  }
+  .nav-link {
+    color: var(--dorado-claro); text-decoration: none; font-size: 0.82rem;
+    font-weight: 600; padding: 0.35rem 1.1rem; border-radius: 4px;
+    transition: all 0.18s; letter-spacing: 0.04em; border: 1px solid transparent;
+  }
+  .nav-link:hover { background: rgba(196,162,75,0.2); border-color: var(--dorado); }
+  .nav-link.activo { background: var(--dorado); color: var(--borgoña-oscuro); }
+
+  /* ── RESUMEN ── */
+  .resumen {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    padding: 1.5rem 2rem; background: var(--blanco); border-bottom: 1px solid var(--gris-borde);
+  }
+  .stat { text-align: center; min-width: 110px; }
+  .stat .num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--borgoña); line-height: 1; }
+  .stat .etiq { font-size: 0.72rem; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+  .sep { width: 1px; background: var(--gris-borde); align-self: stretch; }
+
+  /* ── FILTRO ── */
+  .filtro-bar {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    padding: 1.2rem 0; margin-bottom: 1rem;
+  }
+  .filtro-bar label { font-size: 0.85rem; font-weight: 600; color: var(--texto-suave); }
+  .filtro-bar select {
+    padding: 0.4rem 0.8rem; border: 1px solid var(--gris-borde); border-radius: 4px;
+    font-family: 'Inter', sans-serif; font-size: 0.85rem; background: var(--blanco);
+    color: var(--texto); cursor: pointer;
+  }
+  .filtro-bar select:focus { outline: 2px solid var(--dorado); }
+
+  /* ── PESTAÑAS ── */
+  .tabs { display: flex; padding: 1.5rem 0 0; }
+  .tab-btn {
+    padding: 0.6rem 1.6rem; border: 1px solid var(--gris-borde); background: var(--gris-claro);
+    color: var(--texto-suave); font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .tab-btn:first-child { border-radius: 6px 0 0 0; }
+  .tab-btn:last-child  { border-radius: 0 6px 0 0; border-left: none; }
+  .tab-btn.activo { background: var(--blanco); color: var(--borgoña); border-bottom-color: var(--blanco); border-top: 2px solid var(--borgoña); }
+  .tab-btn:hover:not(.activo) { background: var(--dorado-claro); }
+  .panel { display: none; background: var(--blanco); border: 1px solid var(--gris-borde); border-top: none; border-radius: 0 0 8px 8px; padding: 1.5rem; }
+  .panel.activo { display: block; }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+  .seccion-titulo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--borgoña); margin: 1.5rem 0 0.3rem; }
+  .seccion-desc { font-size: 0.83rem; color: var(--texto-suave); margin-bottom: 1.2rem; }
+
+  /* ── TABLA ── */
+  .tabla-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead th {
+    background: var(--borgoña); color: var(--blanco); padding: 0.65rem 0.85rem;
+    text-align: left; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; position: sticky; top: 0;
+  }
+  thead th.num { text-align: right; }
+  thead th.cen { text-align: center; }
+  tbody tr:nth-child(even) { background: var(--gris-claro); }
+  tbody tr:hover { background: var(--dorado-claro); transition: background 0.15s; }
+  tbody td { padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--gris-borde); }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tfoot tr { border-top: 2px solid var(--borgoña); }
+  tfoot td { padding: 0.6rem 0.85rem; font-weight: 700; background: var(--gris-claro); }
+  tfoot td.num { text-align: right; }
+
+  /* Separador de arciprestazgo */
+  tr.arc-sep td {
+    background: var(--borgoña); color: var(--blanco); font-weight: 700;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+  }
+
+  /* Ratio alto */
+  tr.ratio-alto td.ratio { color: #9B1C1C; font-weight: 700; }
+
+  /* Barra mini */
+  .barra-wrap { display: flex; align-items: center; gap: 0.4rem; }
+  .barra { height: 7px; background: var(--borgoña); border-radius: 3px; opacity: 0.65; min-width: 2px; }
+
+  /* Indicadores */
+  .ind-alto65 { background: #FDECEA !important; }
+  .ind-bajo15 { background: #FDECEA !important; }
+  .ind-ok65   { background: #EBF7E6 !important; }
+  .ind-ok15   { background: #EBF7E6 !important; }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 10px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .badge-rojo  { background: #FDECEA; color: #9B1C1C; }
+  .badge-verde { background: #EBF7E6; color: #276221; }
+  .badge-neutro{ background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* Año dato */
+  .chip-anio {
+    display: inline-block; font-size: 0.72rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle;
+  }
+  .chip-2022 { background: #E3F0FB; color: #1A5276; }
+  .chip-2019 { background: #FEF9E7; color: #7D6608; }
+  .chip-sd   { background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* ── NOTAS ── */
+  .notas {
+    margin-top: 1.4rem; padding: 0.9rem 1.1rem; background: var(--gris-claro);
+    border-left: 3px solid var(--dorado); border-radius: 0 6px 6px 0;
+    font-size: 0.8rem; color: var(--texto-suave);
+  }
+  .notas p { margin-bottom: 0.25rem; }
+  .notas p:last-child { margin-bottom: 0; }
+
+  /* ── PIE ── */
+  footer {
+    text-align: center; padding: 1.4rem 2rem; font-size: 0.76rem;
+    color: var(--texto-suave); border-top: 1px solid var(--gris-borde); margin-top: 2rem;
+  }
+  footer a { color: var(--borgoña); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.35rem; }
+    .stat .num { font-size: 1.5rem; }
+    main { padding: 0 0.75rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="escudo">✝</div>
+  <h1>Población Diocesana</h1>
+  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+</header>
+
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link">Inicio</a>
+    <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+    <a href="grupos-edad.html" class="nav-link">Grupos de edad</a>
+    <a href="indicadores.html" class="nav-link activo">Indicadores</a>
+</nav>
+
+
+<div class="resumen">
+  <div class="stat"><div class="num">13</div><div class="etiq">Arciprestazgos</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">127</div><div class="etiq">Parroquias</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">48</div><div class="etiq">Municipios</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">1,71 M</div><div class="etiq">Habitantes (2025)</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">13.473</div><div class="etiq">Hab. / parroquia</div></div>
+</div>
+
+<main>
+
+  <h2 class="seccion-titulo">Indicadores Demográficos</h2>
+  <p class="seccion-desc">
+    Calculados a partir de los grupos de edad del INE (tablas 33842 · 2022 y PC-AXIS · 2019).
+    <span class="chip-anio chip-2022">2022</span> dato Padrón Continuo &nbsp;
+    <span class="chip-anio chip-2019">2019</span> dato PC-AXIS
+  </p>
+
+  <div class="resumen" style="margin-bottom:1.5rem;border:1px solid var(--gris-borde);border-radius:8px;">
+    <div class="stat">
+      <div class="num">15,7%</div>
+      <div class="etiq">Menores de 15 años</div>
+    </div>
+    <div class="sep"></div>
+    <div class="stat">
+      <div class="num">67,0%</div>
+      <div class="etiq">Población 15-64 años</div>
+    </div>
+    <div class="sep"></div>
+    <div class="stat">
+      <div class="num">17,2%</div>
+      <div class="etiq">Mayores de 65 años</div>
+    </div>
+    <div class="sep"></div>
+    <div class="stat">
+      <div class="num">109,6</div>
+      <div class="etiq">Índice de envejecimiento</div>
+    </div>
+    <div class="sep"></div>
+    <div class="stat">
+      <div class="num">49,1%</div>
+      <div class="etiq">Tasa de dependencia</div>
+    </div>
+  </div>
+
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Municipio</th>
+          <th class="num">Menores de 15</th>
+          <th>% &lt; 15 años</th>
+          <th class="num">Entre 15 y 64</th>
+          <th class="num">% 15-64 años</th>
+          <th class="num">Mayores de 65</th>
+          <th>% ≥ 65 años</th>
+          <th class="num">Índice envej.*</th>
+          <th class="num">Tasa dep.**</th>
+        </tr>
+      </thead>
+      <tbody>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Alcorcón</td></tr>
+<tr>
+        <td>Alcorcón <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">23.501</td>
+        <td><span class="badge badge-neutro">13,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:55px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">107.999</td>
+        <td class="num">63,4%</td>
+        <td class="num">38.796</td>
+        <td><span class="badge badge-rojo">22,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:91px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">165,1</span></td>
+        <td class="num">57,7</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Aranjuez</td></tr>
+<tr>
+        <td>Aranjuez <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">9762</td>
+        <td><span class="badge badge-verde">16,3%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:65px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">39.655</td>
+        <td class="num">66,4%</td>
+        <td class="num">10.345</td>
+        <td><span class="badge badge-neutro">17,3%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:69px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">106,0</span></td>
+        <td class="num">50,7</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Chinchón</td></tr>
+<tr>
+        <td>Chinchón <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">765</td>
+        <td><span class="badge badge-neutro">14,4%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:57px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">3553</td>
+        <td class="num">66,6%</td>
+        <td class="num">1013</td>
+        <td><span class="badge badge-neutro">19,0%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:76px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">132,4</span></td>
+        <td class="num">50,0</td>
+      </tr>
+<tr>
+        <td>Colmenar de Oreja <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1184</td>
+        <td><span class="badge badge-neutro">14,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:59px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">5199</td>
+        <td class="num">64,7%</td>
+        <td class="num">1649</td>
+        <td><span class="badge badge-neutro">20,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:82px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">139,3</span></td>
+        <td class="num">54,5</td>
+      </tr>
+<tr>
+        <td>Belmonte de Tajo <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">242</td>
+        <td><span class="badge badge-neutro">14,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:58px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">1145</td>
+        <td class="num">68,8%</td>
+        <td class="num">277</td>
+        <td><span class="badge badge-neutro">16,6%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:67px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">114,5</span></td>
+        <td class="num">45,3</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Fuenlabrada</td></tr>
+<tr>
+        <td>Fuenlabrada <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">27.122</td>
+        <td><span class="badge badge-neutro">14,6%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:58px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">128.777</td>
+        <td class="num">69,1%</td>
+        <td class="num">30.483</td>
+        <td><span class="badge badge-neutro">16,4%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:65px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">112,4</span></td>
+        <td class="num">44,7</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Getafe</td></tr>
+<tr>
+        <td>Getafe <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">28.460</td>
+        <td><span class="badge badge-neutro">15,0%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:60px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">124.702</td>
+        <td class="num">65,7%</td>
+        <td class="num">36.744</td>
+        <td><span class="badge badge-neutro">19,3%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:77px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">129,1</span></td>
+        <td class="num">52,3</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Griñón</td></tr>
+<tr>
+        <td>Arroyomolinos <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">8606</td>
+        <td><span class="badge badge-verde">24,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:99px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">23.868</td>
+        <td class="num">68,5%</td>
+        <td class="num">2359</td>
+        <td><span class="badge badge-verde">6,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:27px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">27,4</span></td>
+        <td class="num">45,9</td>
+      </tr>
+<tr>
+        <td>Batres <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">251</td>
+        <td><span class="badge badge-neutro">14,9%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:60px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">1185</td>
+        <td class="num">70,4%</td>
+        <td class="num">248</td>
+        <td><span class="badge badge-neutro">14,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:59px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">98,8</span></td>
+        <td class="num">42,1</td>
+      </tr>
+<tr>
+        <td>Casarrubuelos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">752</td>
+        <td><span class="badge badge-verde">19,9%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:80px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">2664</td>
+        <td class="num">70,5%</td>
+        <td class="num">362</td>
+        <td><span class="badge badge-verde">9,6%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:38px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">48,1</span></td>
+        <td class="num">41,8</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Leganés</td></tr>
+<tr>
+        <td>Leganés <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">26.047</td>
+        <td><span class="badge badge-neutro">13,4%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:54px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">125.657</td>
+        <td class="num">64,7%</td>
+        <td class="num">42.380</td>
+        <td><span class="badge badge-neutro">21,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:87px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">162,7</span></td>
+        <td class="num">54,5</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Móstoles</td></tr>
+<tr>
+        <td>Móstoles <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">29.234</td>
+        <td><span class="badge badge-neutro">13,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:55px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">138.954</td>
+        <td class="num">64,9%</td>
+        <td class="num">45.818</td>
+        <td><span class="badge badge-neutro">21,4%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:86px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">156,7</span></td>
+        <td class="num">54,0</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Navalcarnero</td></tr>
+<tr>
+        <td>Aldea del Fresno <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">509</td>
+        <td><span class="badge badge-verde">15,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:63px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">2088</td>
+        <td class="num">64,7%</td>
+        <td class="num">630</td>
+        <td><span class="badge badge-neutro">19,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:78px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">123,8</span></td>
+        <td class="num">54,5</td>
+      </tr>
+<tr>
+        <td>El Álamo <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">1619</td>
+        <td><span class="badge badge-verde">16,0%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:64px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">6613</td>
+        <td class="num">65,3%</td>
+        <td class="num">1891</td>
+        <td><span class="badge badge-neutro">18,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:75px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">116,8</span></td>
+        <td class="num">53,1</td>
+      </tr>
+<tr>
+        <td>Villamantilla <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">222</td>
+        <td><span class="badge badge-verde">17,2%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:69px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">978</td>
+        <td class="num">75,9%</td>
+        <td class="num">89</td>
+        <td><span class="badge badge-verde">6,9%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:28px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">40,1</span></td>
+        <td class="num">31,8</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Parla</td></tr>
+<tr>
+        <td>Parla <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">25.006</td>
+        <td><span class="badge badge-verde">18,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:75px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">99.093</td>
+        <td class="num">74,0%</td>
+        <td class="num">9817</td>
+        <td><span class="badge badge-verde">7,3%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:29px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">39,3</span></td>
+        <td class="num">35,1</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de San Martín de Valdeiglesias</td></tr>
+<tr>
+        <td>Cadalso de los Vidrios <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">444</td>
+        <td><span class="badge badge-neutro">14,6%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:58px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">1942</td>
+        <td class="num">63,9%</td>
+        <td class="num">653</td>
+        <td><span class="badge badge-neutro">21,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:86px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">147,1</span></td>
+        <td class="num">56,5</td>
+      </tr>
+<tr>
+        <td>Cenicientos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">251</td>
+        <td><span class="badge badge-neutro">12,3%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:49px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">1253</td>
+        <td class="num">61,6%</td>
+        <td class="num">529</td>
+        <td><span class="badge badge-rojo">26,0%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:104px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-rojo">210,8</span></td>
+        <td class="num">62,3</td>
+      </tr>
+<tr>
+        <td>Chapinería <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">433</td>
+        <td><span class="badge badge-verde">18,6%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:74px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">1489</td>
+        <td class="num">64,0%</td>
+        <td class="num">406</td>
+        <td><span class="badge badge-neutro">17,4%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:70px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">93,8</span></td>
+        <td class="num">56,3</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Valdemoro</td></tr>
+<tr>
+        <td>Valdemoro <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">14.805</td>
+        <td><span class="badge badge-verde">21,0%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:84px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">48.711</td>
+        <td class="num">69,2%</td>
+        <td class="num">6912</td>
+        <td><span class="badge badge-verde">9,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:39px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">46,7</span></td>
+        <td class="num">44,6</td>
+      </tr>
+<tr>
+        <td>Ciempozuelos <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">4202</td>
+        <td><span class="badge badge-verde">17,1%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:68px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">16.995</td>
+        <td class="num">69,1%</td>
+        <td class="num">3395</td>
+        <td><span class="badge badge-neutro">13,8%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:55px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-neutro">80,8</span></td>
+        <td class="num">44,7</td>
+      </tr>
+<tr>
+        <td>Pinto <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">9413</td>
+        <td><span class="badge badge-verde">16,9%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:68px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">39.323</td>
+        <td class="num">70,6%</td>
+        <td class="num">6975</td>
+        <td><span class="badge badge-neutro">12,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:50px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">74,1</span></td>
+        <td class="num">41,7</td>
+      </tr>
+<tr>
+        <td>San Martín de la Vega <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1287</td>
+        <td><span class="badge badge-verde">19,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:79px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">4335</td>
+        <td class="num">66,5%</td>
+        <td class="num">896</td>
+        <td><span class="badge badge-neutro">13,7%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:55px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">69,6</span></td>
+        <td class="num">50,4</td>
+      </tr>
+<tr class="arc-sep"><td colspan="10">Arciprestazgo de Villaviciosa de Odón</td></tr>
+<tr>
+        <td>Boadilla del Monte <span class="chip-anio chip-2022">2022</span></td>
+        <td class="num">12.836</td>
+        <td><span class="badge badge-verde">20,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:82px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">42.796</td>
+        <td class="num">68,3%</td>
+        <td class="num">6996</td>
+        <td><span class="badge badge-verde">11,2%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:45px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">54,5</span></td>
+        <td class="num">46,3</td>
+      </tr>
+<tr>
+        <td>Brunete <span class="chip-anio chip-2019">2019</span></td>
+        <td class="num">1985</td>
+        <td><span class="badge badge-verde">18,5%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:74px;background:#276221;opacity:0.5"></div></div></td>
+        <td class="num">7449</td>
+        <td class="num">69,4%</td>
+        <td class="num">1302</td>
+        <td><span class="badge badge-neutro">12,1%</span> <div class="barra-wrap" style="margin-top:3px"><div class="barra" style="width:49px;background:#9B1C1C;opacity:0.5"></div></div></td>
+        <td class="num"><span class="badge badge-verde">65,6</span></td>
+        <td class="num">44,1</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="notas">
+    <p>• <strong>* Índice de envejecimiento</strong> = (población ≥ 65 / población &lt; 15) × 100. Valor > 100: más mayores que jóvenes. Valor > 200: muy envejecido.</p>
+    <p>• <strong>** Tasa de dependencia</strong> = ((población &lt; 15 + población ≥ 65) / población 15-64) × 100.</p>
+    <p>• <span class="badge badge-rojo">rojo</span> valor de atención pastoral &nbsp; <span class="badge badge-verde">verde</span> valor favorable &nbsp; <span class="badge badge-neutro">gris</span> valor intermedio.</p>
+    <p>• Municipios sin dato quinquenal disponible no aparecen en esta tabla (consultar <a href="poblacion-2025.html" style="color:var(--borgoña)">Población 2025</a> para totales por sexo).</p>
+    <p>• Dato de grupos de edad: 2022 (Padrón Continuo, tabla 33842) o 2019 (PC-AXIS) según disponibilidad. Los totales por sexo son siempre de 2025.</p>
+  </div>
+</main>
+
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
+  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+</footer>
+
+
+</body>
+</html>

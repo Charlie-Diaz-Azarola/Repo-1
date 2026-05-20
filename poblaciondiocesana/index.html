@@ -228,6 +228,20 @@
     footer a { color: var(--borgoña); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
+
+    /* ── NAV ENTRE PÁGINAS ── */
+    .nav-pages {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+      padding: 0.7rem 2rem; background: var(--borgoña-oscuro);
+    }
+    .nav-link {
+      color: var(--dorado-claro); text-decoration: none; font-size: 0.82rem;
+      font-weight: 600; padding: 0.35rem 1.1rem; border-radius: 4px;
+      transition: all 0.18s; letter-spacing: 0.04em; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: rgba(196,162,75,0.2); border-color: var(--dorado); }
+    .nav-link.activo { background: var(--dorado); color: var(--borgoña-oscuro); }
+
     @media (max-width: 600px) {
       header h1 { font-size: 1.4rem; }
       .stat .num { font-size: 1.6rem; }
@@ -243,6 +257,13 @@
   <h1>Población Diocesana</h1>
   <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
 </header>
+
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link activo">Inicio</a>
+  <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+  <a href="grupos-edad.html" class="nav-link">Grupos de edad</a>
+  <a href="indicadores.html" class="nav-link">Indicadores</a>
+</nav>
 
 <div class="resumen">
   <div class="stat"><div class="num">13</div><div class="etiq">Arciprestazgos</div></div>
