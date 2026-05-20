@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pirámide · Villaviciosa de Odón · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --borgoña:        #6B1A1A;
+    --borgoña-oscuro: #4E1212;
+    --dorado:         #C4A24B;
+    --dorado-claro:   #EAD898;
+    --fondo:          #F7F3EE;
+    --blanco:         #FFFFFF;
+    --gris-claro:     #F0EBE3;
+    --gris-borde:     #D6CCBf;
+    --texto:          #2C2118;
+    --texto-suave:    #6B5B4E;
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--fondo); color: var(--texto); font-size: 15px; line-height: 1.6; }
+
+  header {
+    background: linear-gradient(135deg, var(--borgoña-oscuro) 0%, var(--borgoña) 100%);
+    color: var(--blanco); padding: 2rem 2rem 1.6rem; text-align: center;
+    border-bottom: 4px solid var(--dorado);
+  }
+  header .escudo { font-size: 2rem; margin-bottom: 0.3rem; opacity: 0.9; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; letter-spacing: 0.02em; margin-bottom: 0.25rem; }
+  header p.subtitulo { font-size: 0.85rem; opacity: 0.8; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── NAV ENTRE PÁGINAS ── */
+  .nav-pages {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+    padding: 0.7rem 2rem; background: var(--borgoña-oscuro);
+  }
+  .nav-link {
+    color: var(--dorado-claro); text-decoration: none; font-size: 0.82rem;
+    font-weight: 600; padding: 0.35rem 1.1rem; border-radius: 4px;
+    transition: all 0.18s; letter-spacing: 0.04em; border: 1px solid transparent;
+  }
+  .nav-link:hover { background: rgba(196,162,75,0.2); border-color: var(--dorado); }
+  .nav-link.activo { background: var(--dorado); color: var(--borgoña-oscuro); }
+
+  /* ── RESUMEN ── */
+  .resumen {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    padding: 1.5rem 2rem; background: var(--blanco); border-bottom: 1px solid var(--gris-borde);
+  }
+  .stat { text-align: center; min-width: 110px; }
+  .stat .num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: var(--borgoña); line-height: 1; }
+  .stat .etiq { font-size: 0.72rem; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.2rem; }
+  .sep { width: 1px; background: var(--gris-borde); align-self: stretch; }
+
+  /* ── FILTRO ── */
+  .filtro-bar {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    padding: 1.2rem 0; margin-bottom: 1rem;
+  }
+  .filtro-bar label { font-size: 0.85rem; font-weight: 600; color: var(--texto-suave); }
+  .filtro-bar select {
+    padding: 0.4rem 0.8rem; border: 1px solid var(--gris-borde); border-radius: 4px;
+    font-family: 'Inter', sans-serif; font-size: 0.85rem; background: var(--blanco);
+    color: var(--texto); cursor: pointer;
+  }
+  .filtro-bar select:focus { outline: 2px solid var(--dorado); }
+
+  /* ── PESTAÑAS ── */
+  .tabs { display: flex; padding: 1.5rem 0 0; }
+  .tab-btn {
+    padding: 0.6rem 1.6rem; border: 1px solid var(--gris-borde); background: var(--gris-claro);
+    color: var(--texto-suave); font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em;
+  }
+  .tab-btn:first-child { border-radius: 6px 0 0 0; }
+  .tab-btn:last-child  { border-radius: 0 6px 0 0; border-left: none; }
+  .tab-btn.activo { background: var(--blanco); color: var(--borgoña); border-bottom-color: var(--blanco); border-top: 2px solid var(--borgoña); }
+  .tab-btn:hover:not(.activo) { background: var(--dorado-claro); }
+  .panel { display: none; background: var(--blanco); border: 1px solid var(--gris-borde); border-top: none; border-radius: 0 0 8px 8px; padding: 1.5rem; }
+  .panel.activo { display: block; }
+
+  /* ── MAIN ── */
+  main { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+  .seccion-titulo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--borgoña); margin: 1.5rem 0 0.3rem; }
+  .seccion-desc { font-size: 0.83rem; color: var(--texto-suave); margin-bottom: 1.2rem; }
+
+  /* ── TABLA ── */
+  .tabla-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  thead th {
+    background: var(--borgoña); color: var(--blanco); padding: 0.65rem 0.85rem;
+    text-align: left; font-weight: 600; letter-spacing: 0.03em; white-space: nowrap; position: sticky; top: 0;
+  }
+  thead th.num { text-align: right; }
+  thead th.cen { text-align: center; }
+  tbody tr:nth-child(even) { background: var(--gris-claro); }
+  tbody tr:hover { background: var(--dorado-claro); transition: background 0.15s; }
+  tbody td { padding: 0.5rem 0.85rem; border-bottom: 1px solid var(--gris-borde); }
+  tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tfoot tr { border-top: 2px solid var(--borgoña); }
+  tfoot td { padding: 0.6rem 0.85rem; font-weight: 700; background: var(--gris-claro); }
+  tfoot td.num { text-align: right; }
+
+  /* Separador de arciprestazgo */
+  tr.arc-sep td {
+    background: var(--borgoña); color: var(--blanco); font-weight: 700;
+    font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 0.35rem 0.85rem;
+  }
+
+  /* Ratio alto */
+  tr.ratio-alto td.ratio { color: #9B1C1C; font-weight: 700; }
+
+  /* Barra mini */
+  .barra-wrap { display: flex; align-items: center; gap: 0.4rem; }
+  .barra { height: 7px; background: var(--borgoña); border-radius: 3px; opacity: 0.65; min-width: 2px; }
+
+  /* Indicadores */
+  .ind-alto65 { background: #FDECEA !important; }
+  .ind-bajo15 { background: #FDECEA !important; }
+  .ind-ok65   { background: #EBF7E6 !important; }
+  .ind-ok15   { background: #EBF7E6 !important; }
+  .badge {
+    display: inline-block; padding: 0.1rem 0.45rem; border-radius: 10px;
+    font-size: 0.78rem; font-weight: 600;
+  }
+  .badge-rojo  { background: #FDECEA; color: #9B1C1C; }
+  .badge-verde { background: #EBF7E6; color: #276221; }
+  .badge-neutro{ background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* Año dato */
+  .chip-anio {
+    display: inline-block; font-size: 0.72rem; padding: 0.1rem 0.4rem;
+    border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle;
+  }
+  .chip-2022 { background: #E3F0FB; color: #1A5276; }
+  .chip-2019 { background: #FEF9E7; color: #7D6608; }
+  .chip-sd   { background: var(--gris-claro); color: var(--texto-suave); }
+
+  /* ── NOTAS ── */
+  .notas {
+    margin-top: 1.4rem; padding: 0.9rem 1.1rem; background: var(--gris-claro);
+    border-left: 3px solid var(--dorado); border-radius: 0 6px 6px 0;
+    font-size: 0.8rem; color: var(--texto-suave);
+  }
+  .notas p { margin-bottom: 0.25rem; }
+  .notas p:last-child { margin-bottom: 0; }
+
+  /* ── PIE ── */
+  footer {
+    text-align: center; padding: 1.4rem 2rem; font-size: 0.76rem;
+    color: var(--texto-suave); border-top: 1px solid var(--gris-borde); margin-top: 2rem;
+  }
+  footer a { color: var(--borgoña); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 600px) {
+    header h1 { font-size: 1.35rem; }
+    .stat .num { font-size: 1.5rem; }
+    main { padding: 0 0.75rem 2rem; }
+  }
+
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 1.3rem; background: var(--borgoña); color: var(--blanco);
+    border: none; border-radius: 6px; font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: background 0.2s; margin: 1rem 0 0.5rem;
+  }
+  .btn-back:hover { background: var(--borgoña-oscuro); }
+  .piramide-contenedor {
+    background: var(--blanco); border: 1px solid var(--gris-borde);
+    border-radius: 8px; padding: 1.5rem; margin: 1.2rem 0;
+  }
+  .pir-leyenda {
+    display: grid; grid-template-columns: 1fr 52px 1fr;
+    margin-bottom: 0.7rem; font-size: 0.85rem; font-weight: 600;
+  }
+  .pir-ley-h { color: #1A3A6B; text-align: right; padding-right: 6px; }
+  .pir-ley-m { color: #7B2512; text-align: left;  padding-left:  6px; }
+  .piramide { display: flex; flex-direction: column; gap: 3px; }
+  .pir-fila { display: grid; grid-template-columns: 1fr 52px 1fr; align-items: center; min-height: 22px; }
+  .pir-lado-h { display: flex; justify-content: flex-end; }
+  .pir-lado-m { display: flex; justify-content: flex-start; }
+  .pir-label  { text-align: center; font-size: 0.72rem; color: var(--texto-suave); padding: 0 3px; }
+  .pir-bar    { height: 16px; min-width: 2px; }
+  .pir-bar-h  { background: #2257A8; border-radius: 3px 0 0 3px; }
+  .pir-bar-m  { background: #C0392B; border-radius: 0 3px 3px 0; }
+  .pir-pct    { font-size: 0.67rem; color: var(--texto-suave); white-space: nowrap; min-width: 36px; }
+  .pir-pct-h  { text-align: right; padding-right: 4px; }
+  .pir-pct-m  { text-align: left;  padding-left:  4px; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="escudo">✝</div>
+  <h1>Población Diocesana</h1>
+  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+</header>
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link">Inicio</a>
+  <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+  <a href="grupos-edad.html" class="nav-link">Grupos de edad</a>
+  <a href="indicadores.html" class="nav-link">Indicadores</a>
+</nav>
+
+<div class="resumen">
+  <div class="stat"><div class="num">13</div><div class="etiq">Arciprestazgos</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">127</div><div class="etiq">Parroquias</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">48</div><div class="etiq">Municipios</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">1,71 M</div><div class="etiq">Habitantes (2025)</div></div>
+  <div class="sep"></div>
+  <div class="stat"><div class="num">13.473</div><div class="etiq">Hab. / parroquia</div></div>
+</div>
+<main>
+
+  <button class="btn-back" onclick="history.back()">&#8592; Volver</button>
+
+  <h2 class="seccion-titulo">Pirámide de Población · Villaviciosa de Odón</h2>
+  <p class="seccion-desc">
+    Grupos de edad quinquenales &nbsp;·&nbsp; Dato <span class="chip-anio chip-sd">2024</span>
+    &nbsp;·&nbsp; Fuente: INE
+  </p>
+
+  <div class="piramide-contenedor">
+    <div class="pir-leyenda">
+      <span class="pir-ley-h">&#9664; Hombres</span>
+      <span></span>
+      <span class="pir-ley-m">Mujeres &#9654;</span>
+    </div>
+    <div class="piramide">
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">0,0%</span><div class="pir-bar pir-bar-h" style="width:0.2%" title="3 hombres"></div></div>
+        <div class="pir-label">100+</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:0.6%" title="7 mujeres"></div><span class="pir-pct pir-pct-m">0,0%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">0,1%</span><div class="pir-bar pir-bar-h" style="width:1.2%" title="15 hombres"></div></div>
+        <div class="pir-label">95-99</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:5.5%" title="69 mujeres"></div><span class="pir-pct pir-pct-m">0,5%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">0,6%</span><div class="pir-bar pir-bar-h" style="width:6.2%" title="78 hombres"></div></div>
+        <div class="pir-label">90-94</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:14.8%" title="185 mujeres"></div><span class="pir-pct pir-pct-m">1,2%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">1,2%</span><div class="pir-bar pir-bar-h" style="width:13.5%" title="169 hombres"></div></div>
+        <div class="pir-label">85-89</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:21.8%" title="272 mujeres"></div><span class="pir-pct pir-pct-m">1,8%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">2,4%</span><div class="pir-bar pir-bar-h" style="width:26.8%" title="335 hombres"></div></div>
+        <div class="pir-label">80-84</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:31.1%" title="389 mujeres"></div><span class="pir-pct pir-pct-m">2,6%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">4,6%</span><div class="pir-bar pir-bar-h" style="width:51.4%" title="643 hombres"></div></div>
+        <div class="pir-label">75-79</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:58.9%" title="736 mujeres"></div><span class="pir-pct pir-pct-m">4,8%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">5,2%</span><div class="pir-bar pir-bar-h" style="width:59.0%" title="738 hombres"></div></div>
+        <div class="pir-label">70-74</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:65.6%" title="820 mujeres"></div><span class="pir-pct pir-pct-m">5,4%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">5,4%</span><div class="pir-bar pir-bar-h" style="width:61.4%" title="767 hombres"></div></div>
+        <div class="pir-label">65-69</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:68.4%" title="855 mujeres"></div><span class="pir-pct pir-pct-m">5,6%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">6,3%</span><div class="pir-bar pir-bar-h" style="width:71.4%" title="893 hombres"></div></div>
+        <div class="pir-label">60-64</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:83.3%" title="1041 mujeres"></div><span class="pir-pct pir-pct-m">6,9%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">7,1%</span><div class="pir-bar pir-bar-h" style="width:79.8%" title="997 hombres"></div></div>
+        <div class="pir-label">55-59</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:85.0%" title="1062 mujeres"></div><span class="pir-pct pir-pct-m">7,0%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">7,7%</span><div class="pir-bar pir-bar-h" style="width:87.2%" title="1090 hombres"></div></div>
+        <div class="pir-label">50-54</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:97.5%" title="1219 mujeres"></div><span class="pir-pct pir-pct-m">8,0%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">8,0%</span><div class="pir-bar pir-bar-h" style="width:89.9%" title="1124 hombres"></div></div>
+        <div class="pir-label">45-49</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:100.0%" title="1250 mujeres"></div><span class="pir-pct pir-pct-m">8,2%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">5,9%</span><div class="pir-bar pir-bar-h" style="width:66.6%" title="833 hombres"></div></div>
+        <div class="pir-label">40-44</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:75.4%" title="943 mujeres"></div><span class="pir-pct pir-pct-m">6,2%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">4,8%</span><div class="pir-bar pir-bar-h" style="width:53.6%" title="670 hombres"></div></div>
+        <div class="pir-label">35-39</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:56.6%" title="708 mujeres"></div><span class="pir-pct pir-pct-m">4,7%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">4,7%</span><div class="pir-bar pir-bar-h" style="width:52.6%" title="658 hombres"></div></div>
+        <div class="pir-label">30-34</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:56.3%" title="704 mujeres"></div><span class="pir-pct pir-pct-m">4,6%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">6,0%</span><div class="pir-bar pir-bar-h" style="width:68.1%" title="851 hombres"></div></div>
+        <div class="pir-label">25-29</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:64.6%" title="807 mujeres"></div><span class="pir-pct pir-pct-m">5,3%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">8,7%</span><div class="pir-bar pir-bar-h" style="width:98.2%" title="1227 hombres"></div></div>
+        <div class="pir-label">20-24</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:99.9%" title="1249 mujeres"></div><span class="pir-pct pir-pct-m">8,2%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">8,0%</span><div class="pir-bar pir-bar-h" style="width:89.8%" title="1122 hombres"></div></div>
+        <div class="pir-label">15-19</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:88.7%" title="1109 mujeres"></div><span class="pir-pct pir-pct-m">7,3%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">5,8%</span><div class="pir-bar pir-bar-h" style="width:65.0%" title="812 hombres"></div></div>
+        <div class="pir-label">10-14</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:61.3%" title="766 mujeres"></div><span class="pir-pct pir-pct-m">5,0%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">4,4%</span><div class="pir-bar pir-bar-h" style="width:49.6%" title="620 hombres"></div></div>
+        <div class="pir-label">5-9</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:46.9%" title="586 mujeres"></div><span class="pir-pct pir-pct-m">3,9%</span></div>
+      </div>
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">3,2%</span><div class="pir-bar pir-bar-h" style="width:36.3%" title="454 hombres"></div></div>
+        <div class="pir-label">0-4</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:33.4%" title="418 mujeres"></div><span class="pir-pct pir-pct-m">2,8%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="seccion-titulo" style="margin-top:0.5rem">Datos por grupo de edad</h3>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Grupo de edad</th>
+          <th class="num" style="background:#2257A8">Hombres</th>
+          <th class="num" style="background:#7B2512">Mujeres</th>
+          <th class="num">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>0-4</td>
+        <td class="num">454</td>
+        <td class="num">418</td>
+        <td class="num">872</td>
+      </tr>
+      <tr>
+        <td>5-9</td>
+        <td class="num">620</td>
+        <td class="num">586</td>
+        <td class="num">1206</td>
+      </tr>
+      <tr>
+        <td>10-14</td>
+        <td class="num">812</td>
+        <td class="num">766</td>
+        <td class="num">1578</td>
+      </tr>
+      <tr>
+        <td>15-19</td>
+        <td class="num">1122</td>
+        <td class="num">1109</td>
+        <td class="num">2231</td>
+      </tr>
+      <tr>
+        <td>20-24</td>
+        <td class="num">1227</td>
+        <td class="num">1249</td>
+        <td class="num">2476</td>
+      </tr>
+      <tr>
+        <td>25-29</td>
+        <td class="num">851</td>
+        <td class="num">807</td>
+        <td class="num">1658</td>
+      </tr>
+      <tr>
+        <td>30-34</td>
+        <td class="num">658</td>
+        <td class="num">704</td>
+        <td class="num">1362</td>
+      </tr>
+      <tr>
+        <td>35-39</td>
+        <td class="num">670</td>
+        <td class="num">708</td>
+        <td class="num">1378</td>
+      </tr>
+      <tr>
+        <td>40-44</td>
+        <td class="num">833</td>
+        <td class="num">943</td>
+        <td class="num">1776</td>
+      </tr>
+      <tr>
+        <td>45-49</td>
+        <td class="num">1124</td>
+        <td class="num">1250</td>
+        <td class="num">2374</td>
+      </tr>
+      <tr>
+        <td>50-54</td>
+        <td class="num">1090</td>
+        <td class="num">1219</td>
+        <td class="num">2309</td>
+      </tr>
+      <tr>
+        <td>55-59</td>
+        <td class="num">997</td>
+        <td class="num">1062</td>
+        <td class="num">2059</td>
+      </tr>
+      <tr>
+        <td>60-64</td>
+        <td class="num">893</td>
+        <td class="num">1041</td>
+        <td class="num">1934</td>
+      </tr>
+      <tr>
+        <td>65-69</td>
+        <td class="num">767</td>
+        <td class="num">855</td>
+        <td class="num">1622</td>
+      </tr>
+      <tr>
+        <td>70-74</td>
+        <td class="num">738</td>
+        <td class="num">820</td>
+        <td class="num">1558</td>
+      </tr>
+      <tr>
+        <td>75-79</td>
+        <td class="num">643</td>
+        <td class="num">736</td>
+        <td class="num">1379</td>
+      </tr>
+      <tr>
+        <td>80-84</td>
+        <td class="num">335</td>
+        <td class="num">389</td>
+        <td class="num">724</td>
+      </tr>
+      <tr>
+        <td>85-89</td>
+        <td class="num">169</td>
+        <td class="num">272</td>
+        <td class="num">441</td>
+      </tr>
+      <tr>
+        <td>90-94</td>
+        <td class="num">78</td>
+        <td class="num">185</td>
+        <td class="num">263</td>
+      </tr>
+      <tr>
+        <td>95-99</td>
+        <td class="num">15</td>
+        <td class="num">69</td>
+        <td class="num">84</td>
+      </tr>
+      <tr>
+        <td>100+</td>
+        <td class="num">3</td>
+        <td class="num">7</td>
+        <td class="num">10</td>
+      </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td class="num">14.099</td>
+          <td class="num">15.195</td>
+          <td class="num">29.294</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="notas" style="margin-top:1.5rem">
+    <p>• Dato de grupos quinquenales: 2024 · Fuente: INE (Padrón Continuo tabla 33842 / PC-AXIS).</p>
+  </div>
+</main>
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
+  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+</footer>
+</body>
+</html>

@@ -50,6 +50,15 @@ const municipios = raw.municipios.filter(m =>
 const fmt  = n => n == null ? '—' : Number(n).toLocaleString('es-ES');
 const fmtD = (n, dec=1) => n == null ? '—' : Number(n).toFixed(dec).replace('.', ',');
 
+function slugMunicipio(nombre) {
+  return nombre
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .trim()
+    .replace(/\s+/g, '-');
+}
+
 function indicadores(m) {
   const t = m.poblacion.total;
   if (!t) return null;
@@ -423,7 +432,7 @@ function generarGruposEdad() {
         return `<td class="num">${v != null ? fmt(v) : '—'}</td>`;
       }).join('');
       filasTotal += `<tr>
-        <td>${m.nombre} <span class="chip-anio ${chipClass}">${anio || 's/d'}</span></td>
+        <td><a href="piramide-${slugMunicipio(m.nombre)}.html" class="mun-link">${m.nombre}</a> <span class="chip-anio ${chipClass}">${anio || 's/d'}</span></td>
         <td class="num">${fmt(tot)}</td>
         ${celdas}
       </tr>\n`;
@@ -440,7 +449,7 @@ function generarGruposEdad() {
     const cH = GRUPOS.map(g=>`<td class="num hcol">${fmt(h[g])}</td>`).join('');
     const cM = GRUPOS.map(g=>`<td class="num mcol">${fmt(mj[g])}</td>`).join('');
     filasHM += `<tr>
-      <td>${m.nombre}</td>
+      <td><a href="piramide-${slugMunicipio(m.nombre)}.html" class="mun-link">${m.nombre}</a></td>
       <td class="num hcol"><strong>${fmt(h['todas_edades'])}</strong></td>
       ${cH}
       <td class="num mcol"><strong>${fmt(mj['todas_edades'])}</strong></td>
@@ -451,6 +460,7 @@ function generarGruposEdad() {
   const contenido = `
   <h2 class="seccion-titulo">Distribución por Grupos de Edad</h2>
   <p class="seccion-desc">Fuente: INE · Estadística del Padrón Continuo (tabla 33842, 2022) y tabla PC-AXIS (2019)</p>
+  <p class="aviso-piramide">&#9432; Pinche en el nombre de un municipio para ver su pirámide de población.</p>
 
   <div class="tabs">
     <button class="tab-btn activo" onclick="mostrarPanel('total',this)">Población total</button>
@@ -484,7 +494,7 @@ ${filasTotal}        </tbody>
 
   <div id="panel-hm" class="panel">
     <p class="seccion-desc" style="margin-bottom:0.8rem;">
-      Desglose por sexo disponible solo para los 9 municipios más grandes (dato 2022, INE tabla 33842).
+      Desglose por sexo (dato 2022, INE tabla 33842).
     </p>
     <div class="tabla-wrap">
       <table>
@@ -507,7 +517,7 @@ ${filasHM}        </tbody>
     </div>
     <div class="notas">
       <p>• Datos a 1 de enero de 2022 (último año disponible en INE tabla 33842). Fuente: INE / Anexos de Demografía Wikipedia ES.</p>
-      <p>• Los 9 municipios mostrados son aquellos para los que se dispone del desglose completo por sexo y grupo de edad.</p>
+      <p>• Se muestran los municipios para los que se dispone del desglose completo por sexo y grupo de edad.</p>
     </div>
   </div>`;
 
@@ -515,6 +525,14 @@ ${filasHM}        </tbody>
     .hcol { background: #EBF2FB; }
     .mcol { background: #FDECE8; }
     tr.arc-sep td { background: var(--borgoña); }
+    .mun-link { color: var(--borgoña); text-decoration: none; }
+    .mun-link:hover { text-decoration: underline; }
+    .aviso-piramide {
+      font-size: 0.85rem; color: var(--borgoña); font-style: italic;
+      margin: 0.4rem 0 1rem; padding: 0.5rem 0.8rem;
+      background: var(--gris-claro); border-left: 3px solid var(--dorado);
+      border-radius: 0 4px 4px 0; display: inline-block;
+    }
   </style>
   <script>
   function mostrarPanel(id, btn) {
@@ -665,6 +683,170 @@ ${filas}      </tbody>
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
+// PÁGINAS DE PIRÁMIDE: piramide-{slug}.html
+// ══════════════════════════════════════════════════════════════════════════════
+function generarPiramide(m) {
+  const h  = m.poblacion.hombres;
+  const mj = m.poblacion.mujeres;
+  const t  = m.poblacion.total;
+
+  const totH = h['todas_edades'] || 0;
+  const totM = mj['todas_edades'] || 0;
+
+  let maxVal = 0;
+  for (const g of GRUPOS) {
+    maxVal = Math.max(maxVal, h[g] || 0, mj[g] || 0);
+  }
+
+  let filasGrafico = '';
+  let filasDatos   = '';
+  for (const g of [...GRUPOS].reverse()) {
+    const vH  = h[g] || 0;
+    const vM  = mj[g] || 0;
+    const pctH = maxVal > 0 ? ((vH / maxVal) * 100).toFixed(1) : 0;
+    const pctM = maxVal > 0 ? ((vM / maxVal) * 100).toFixed(1) : 0;
+    const etH  = totH > 0 ? fmtD(vH / totH * 100) + '%' : '';
+    const etM  = totM > 0 ? fmtD(vM / totM * 100) + '%' : '';
+
+    filasGrafico += `
+      <div class="pir-fila">
+        <div class="pir-lado-h"><span class="pir-pct pir-pct-h">${etH}</span><div class="pir-bar pir-bar-h" style="width:${pctH}%" title="${fmt(vH)} hombres"></div></div>
+        <div class="pir-label">${g}</div>
+        <div class="pir-lado-m"><div class="pir-bar pir-bar-m" style="width:${pctM}%" title="${fmt(vM)} mujeres"></div><span class="pir-pct pir-pct-m">${etM}</span></div>
+      </div>`;
+  }
+  for (const g of GRUPOS) {
+    const vH = h[g] || 0;
+    const vM = mj[g] || 0;
+    const vT = t ? (t[g] || 0) : vH + vM;
+
+    filasDatos += `      <tr>
+        <td>${g}</td>
+        <td class="num">${fmt(vH)}</td>
+        <td class="num">${fmt(vM)}</td>
+        <td class="num">${fmt(vT)}</td>
+      </tr>\n`;
+  }
+
+  const anio      = m.poblacion.anio_quinquenales;
+  const chipClass = anio === 2022 ? 'chip-2022' : anio === 2019 ? 'chip-2019' : 'chip-sd';
+  const totT      = t ? (t['todas_edades'] || 0) : totH + totM;
+
+  const cssExtra = `
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 1.3rem; background: var(--borgoña); color: var(--blanco);
+    border: none; border-radius: 6px; font-family: 'Inter', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    text-decoration: none; transition: background 0.2s; margin: 1rem 0 0.5rem;
+  }
+  .btn-back:hover { background: var(--borgoña-oscuro); }
+  .piramide-contenedor {
+    background: var(--blanco); border: 1px solid var(--gris-borde);
+    border-radius: 8px; padding: 1.5rem; margin: 1.2rem 0;
+  }
+  .pir-leyenda {
+    display: grid; grid-template-columns: 1fr 52px 1fr;
+    margin-bottom: 0.7rem; font-size: 0.85rem; font-weight: 600;
+  }
+  .pir-ley-h { color: #1A3A6B; text-align: right; padding-right: 6px; }
+  .pir-ley-m { color: #7B2512; text-align: left;  padding-left:  6px; }
+  .piramide { display: flex; flex-direction: column; gap: 3px; }
+  .pir-fila { display: grid; grid-template-columns: 1fr 52px 1fr; align-items: center; min-height: 22px; }
+  .pir-lado-h { display: flex; justify-content: flex-end; }
+  .pir-lado-m { display: flex; justify-content: flex-start; }
+  .pir-label  { text-align: center; font-size: 0.72rem; color: var(--texto-suave); padding: 0 3px; }
+  .pir-bar    { height: 16px; min-width: 2px; }
+  .pir-bar-h  { background: #2257A8; border-radius: 3px 0 0 3px; }
+  .pir-bar-m  { background: #C0392B; border-radius: 0 3px 3px 0; }
+  .pir-pct    { font-size: 0.67rem; color: var(--texto-suave); white-space: nowrap; min-width: 36px; }
+  .pir-pct-h  { text-align: right; padding-right: 4px; }
+  .pir-pct-m  { text-align: left;  padding-left:  4px; }`;
+
+  const contenido = `
+  <button class="btn-back" onclick="history.back()">&#8592; Volver</button>
+
+  <h2 class="seccion-titulo">Pirámide de Población · ${m.nombre}</h2>
+  <p class="seccion-desc">
+    Grupos de edad quinquenales &nbsp;·&nbsp; Dato <span class="chip-anio ${chipClass}">${anio || 's/d'}</span>
+    &nbsp;·&nbsp; Fuente: INE
+  </p>
+
+  <div class="piramide-contenedor">
+    <div class="pir-leyenda">
+      <span class="pir-ley-h">&#9664; Hombres</span>
+      <span></span>
+      <span class="pir-ley-m">Mujeres &#9654;</span>
+    </div>
+    <div class="piramide">${filasGrafico}
+    </div>
+  </div>
+
+  <h3 class="seccion-titulo" style="margin-top:0.5rem">Datos por grupo de edad</h3>
+  <div class="tabla-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Grupo de edad</th>
+          <th class="num" style="background:#2257A8">Hombres</th>
+          <th class="num" style="background:#7B2512">Mujeres</th>
+          <th class="num">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+${filasDatos}      </tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td class="num">${fmt(totH)}</td>
+          <td class="num">${fmt(totM)}</td>
+          <td class="num">${fmt(totT)}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <div class="notas" style="margin-top:1.5rem">
+    <p>• Dato de grupos quinquenales: ${anio || 's/d'} · Fuente: INE (Padrón Continuo tabla 33842 / PC-AXIS).</p>
+  </div>`;
+
+  return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pirámide · ${m.nombre} · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>${CSS_COMUN}${cssExtra}
+  </style>
+</head>
+<body>
+<header>
+  <div class="escudo">✝</div>
+  <h1>Población Diocesana</h1>
+  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+</header>
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link">Inicio</a>
+  <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+  <a href="grupos-edad.html" class="nav-link">Grupos de edad</a>
+  <a href="indicadores.html" class="nav-link">Indicadores</a>
+</nav>
+${RESUMEN_COMUN}
+<main>
+${contenido}
+</main>
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
+  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+</footer>
+</body>
+</html>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
 // MODIFICAR index.html: añadir nav bar
 // ══════════════════════════════════════════════════════════════════════════════
 function actualizarIndex() {
@@ -719,6 +901,15 @@ fs.writeFileSync(path.join(OUT, 'indicadores.html'), generarIndicadores(), 'utf8
 console.log('✓ indicadores.html generado');
 
 actualizarIndex();
+
+const munConPiramide = municipios.filter(m => m.poblacion.hombres !== null && m.poblacion.mujeres !== null);
+let piramideCount = 0;
+for (const m of munConPiramide) {
+  const fname = `piramide-${slugMunicipio(m.nombre)}.html`;
+  fs.writeFileSync(path.join(OUT, fname), generarPiramide(m), 'utf8');
+  piramideCount++;
+}
+console.log(`✓ ${piramideCount} páginas de pirámide generadas`);
 
 console.log('\nArchivos en', OUT);
 console.log(fs.readdirSync(OUT).filter(f=>f.endsWith('.html')).join('  |  '));
