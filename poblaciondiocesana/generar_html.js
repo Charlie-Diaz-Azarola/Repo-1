@@ -259,9 +259,8 @@ function pagina({ title, navActivo, resumen, contenido, scripts = '' }) {
 <body>
 
 <header>
-  <div class="escudo">✝</div>
   <h1>Población Diocesana</h1>
-  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+  <p class="subtitulo">Diócesis de Getafe</p>
 </header>
 
 <nav class="nav-pages">
@@ -275,8 +274,7 @@ ${contenido}
 </main>
 
 <footer>
-  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
-  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
 </footer>
 
 ${scripts}
@@ -824,9 +822,8 @@ ${filasDatos}      </tbody>
 </head>
 <body>
 <header>
-  <div class="escudo">✝</div>
   <h1>Población Diocesana</h1>
-  <p class="subtitulo">Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial</p>
+  <p class="subtitulo">Diócesis de Getafe</p>
 </header>
 <nav class="nav-pages">
   <a href="index.html" class="nav-link">Inicio</a>
@@ -839,8 +836,7 @@ ${RESUMEN_COMUN}
 ${contenido}
 </main>
 <footer>
-  <p>Diócesis de Getafe &nbsp;·&nbsp; Plan de Organización Territorial &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
-  <p style="margin-top:0.3rem;"><a href="https://www.diocesisgetafe.es" target="_blank" rel="noopener">diocesisgetafe.es</a></p>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Datos: Guía Diocesana enero 2026, INE</p>
 </footer>
 </body>
 </html>`;
