@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador de Visitas · Población Diocesana</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      padding: 12px;
+    }
+
+    .contador {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0a0500;
+      border: 1.5px solid #c4a24b;
+      border-radius: 8px;
+      padding: 10px 16px 10px 12px;
+      box-shadow: 0 4px 18px rgba(196,162,75,0.15), inset 0 1px 3px rgba(0,0,0,0.9);
+    }
+
+    .label {
+      font-size: 7px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #8b6914;
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      user-select: none;
+    }
+
+    .digitos {
+      display: flex;
+      gap: 2px;
+      align-items: center;
+    }
+
+    .digito {
+      width: 26px;
+      height: 42px;
+      background: linear-gradient(180deg, #1c0a00 0%, #100600 100%);
+      border: 1px solid #6b4000;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #f0a000;
+      text-shadow: 0 0 6px #f0a000, 0 0 14px rgba(240,160,0,0.5);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.7);
+      position: relative;
+    }
+
+    .digito::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 48%;
+      background: rgba(255,255,255,0.025);
+      border-radius: 3px 3px 0 0;
+      pointer-events: none;
+    }
+
+    .digito.apagado {
+      color: #261200;
+      text-shadow: none;
+    }
+
+    .separador {
+      width: 5px;
+      height: 5px;
+      background: #c4a24b;
+      border-radius: 50%;
+      opacity: 0.35;
+      flex-shrink: 0;
+      margin: 0 1px;
+    }
+
+    .subtitulo {
+      margin-top: 7px;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #6b4000;
+    }
+
+    .error-msg {
+      font-size: 11px;
+      color: #6b4000;
+      letter-spacing: 3px;
+      padding: 0 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="contador">
+    <span class="label">Visitas</span>
+    <div class="digitos" id="digitos">
+      <span class="error-msg">·····</span>
+    </div>
+  </div>
+  <div class="subtitulo">Población Diocesana</div>
+
+  <script>
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTB7EyQ-ZJ1Bakr37ZcFoPZVACB94NkY8QaXHxsXv1CrtoSAixZr2XDh7laE8aHMQS/exec';
+    var NUM_DIGITOS = 7;
+
+    function renderDigitos(n) {
+      var num = parseInt(n, 10) || 0;
+      var significativo = String(num);
+      var str = significativo.padStart(NUM_DIGITOS, '0');
+      var cerosIniciales = NUM_DIGITOS - significativo.length;
+      var container = document.getElementById('digitos');
+      container.innerHTML = '';
+
+      for (var i = 0; i < str.length; i++) {
+        if (i > 0 && (str.length - i) % 3 === 0) {
+          var sep = document.createElement('div');
+          sep.className = 'separador';
+          container.appendChild(sep);
+        }
+        var d = document.createElement('div');
+        d.className = 'digito' + (i < cerosIniciales ? ' apagado' : '');
+        d.textContent = str[i];
+        container.appendChild(d);
+      }
+    }
+
+    function cargarContador() {
+      var nombre = '_gcb' + Date.now();
+      window[nombre] = function(data) {
+        renderDigitos(data.visitas);
+        delete window[nombre];
+        var s = document.getElementById('_jsonp');
+        if (s) s.parentNode.removeChild(s);
+      };
+      var script = document.createElement('script');
+      script.id = '_jsonp';
+      script.src = SCRIPT_URL + '?cb=' + nombre;
+      script.onerror = function() {
+        document.getElementById('digitos').innerHTML = '<span class="error-msg">---</span>';
+        delete window[nombre];
+      };
+      document.head.appendChild(script);
+    }
+
+    cargarContador();
+  </script>
+
+</body>
+</html>

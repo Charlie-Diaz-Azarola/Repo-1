@@ -767,5 +767,14 @@
   }
 </script>
 
+
+<!-- Contador de visitas: dispara el incremento al cargar la página -->
+<script>
+  (function() {
+    var url = 'https://script.google.com/macros/s/AKfycbwTB7EyQ-ZJ1Bakr37ZcFoPZVACB94NkY8QaXHxsXv1CrtoSAixZr2XDh7laE8aHMQS/exec?action=incrementar&_=' + Date.now();
+    new Image().src = url;
+  })();
+</script>
+
 </body>
 </html>
