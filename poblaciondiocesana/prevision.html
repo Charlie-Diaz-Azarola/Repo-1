@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Previsión Demográfica · Diócesis de Getafe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --borgoña:   #6B1A1A;
+      --borgoña-oscuro: #4E1212;
+      --dorado:    #C4A24B;
+      --dorado-claro: #EAD898;
+      --fondo:     #F7F3EE;
+      --blanco:    #FFFFFF;
+      --gris-claro:#F0EBE3;
+      --gris-borde:#D6CCBf;
+      --texto:     #2C2118;
+      --texto-suave:#6B5B4E;
+      --verde-fondo: #F0F7F0;
+      --verde-borde: #4A7C59;
+      --naranja-fondo: #FFF8F0;
+      --naranja-borde: #C47A1A;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--borgoña-oscuro) 0%, var(--borgoña) 100%);
+      color: var(--blanco);
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 4px solid var(--dorado);
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+    }
+    header p.subtitulo {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-pages {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0.25rem;
+      padding: 0.7rem 2rem; background: var(--borgoña-oscuro);
+    }
+    .nav-link {
+      color: var(--dorado-claro); text-decoration: none; font-size: 0.82rem;
+      font-weight: 600; padding: 0.35rem 1.1rem; border-radius: 4px;
+      transition: all 0.18s; letter-spacing: 0.04em; border: 1px solid transparent;
+    }
+    .nav-link:hover { background: rgba(196,162,75,0.2); border-color: var(--dorado); }
+    .nav-link.activo { background: var(--dorado); color: var(--borgoña-oscuro); }
+
+    /* Índice de informes */
+    .indice-informes {
+      max-width: 1100px;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+    }
+    .indice-informes h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--texto-suave);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--gris-borde);
+      padding-bottom: 0.4rem;
+    }
+    .informe-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      border-left: 4px solid var(--borgoña);
+      border-radius: 6px;
+      margin-bottom: 0.6rem;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .informe-card:hover { border-left-color: var(--dorado); background: var(--dorado-claro); }
+    .informe-card.activo { border-left-color: var(--borgoña); background: var(--gris-claro); }
+    .informe-card .fecha {
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      white-space: nowrap;
+      background: var(--gris-claro);
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+    }
+    .informe-card .titulo-card { font-weight: 600; color: var(--borgoña); }
+    .informe-card .desc-card { font-size: 0.82rem; color: var(--texto-suave); }
+
+    /* Contenido del informe */
+    main {
+      max-width: 1100px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem 3rem;
+    }
+
+    .informe-contenido {
+      background: var(--blanco);
+      border: 1px solid var(--gris-borde);
+      border-radius: 8px;
+      padding: 2.5rem 2.5rem 2rem;
+    }
+
+    .informe-cabecera {
+      border-bottom: 2px solid var(--dorado);
+      padding-bottom: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    .informe-cabecera h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: var(--borgoña);
+      margin-bottom: 0.4rem;
+    }
+    .informe-cabecera .meta {
+      font-size: 0.82rem;
+      color: var(--texto-suave);
+    }
+    .informe-cabecera .badge-agente {
+      display: inline-block;
+      background: var(--borgoña);
+      color: var(--blanco);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.15rem 0.6rem;
+      border-radius: 3px;
+      margin-right: 0.5rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Tipografía dentro del informe */
+    .informe-contenido h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      color: var(--borgoña);
+      margin: 2rem 0 0.6rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    .informe-contenido h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--texto);
+      margin: 1.4rem 0 0.5rem;
+    }
+    .informe-contenido h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+      margin: 1rem 0 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .informe-contenido p {
+      margin-bottom: 0.8rem;
+    }
+    .informe-contenido ul, .informe-contenido ol {
+      margin: 0.5rem 0 0.8rem 1.4rem;
+    }
+    .informe-contenido li { margin-bottom: 0.3rem; }
+    .informe-contenido strong { color: var(--texto); }
+
+    /* Tablas dentro del informe */
+    .informe-contenido table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      margin: 0.8rem 0 1.2rem;
+    }
+    .informe-contenido thead th {
+      background: var(--borgoña);
+      color: var(--blanco);
+      padding: 0.55rem 0.8rem;
+      text-align: left;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .informe-contenido tbody tr:nth-child(even) { background: var(--gris-claro); }
+    .informe-contenido tbody tr:hover { background: var(--dorado-claro); }
+    .informe-contenido tbody td {
+      padding: 0.45rem 0.8rem;
+      border-bottom: 1px solid var(--gris-borde);
+      vertical-align: top;
+    }
+    .tabla-wrap { overflow-x: auto; }
+
+    /* Cajas especiales */
+    .caja-resumen {
+      background: var(--gris-claro);
+      border-left: 4px solid var(--borgoña);
+      border-radius: 0 6px 6px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .caja-alerta {
+      background: var(--naranja-fondo);
+      border-left: 4px solid var(--naranja-borde);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.4rem;
+      margin: 1rem 0 1.2rem;
+      font-size: 0.88rem;
+    }
+    .caja-alerta strong { color: #8B4A00; }
+    .caja-pastoral {
+      background: var(--verde-fondo);
+      border-left: 4px solid var(--verde-borde);
+      border-radius: 0 6px 6px 0;
+      padding: 1rem 1.4rem;
+      margin: 0.8rem 0 1.2rem;
+      font-size: 0.88rem;
+    }
+    .caja-pastoral strong { color: #2D5A3D; }
+
+    /* Clasificación de crecimiento */
+    .crec-muy-alto { border-left-color: #9B1C1C; background: #FFF5F5; }
+    .crec-alto { border-left-color: var(--naranja-borde); background: var(--naranja-fondo); }
+    .crec-moderado { border-left-color: #1A6B8B; background: #F0F7FC; }
+    .crec-lento { border-left-color: #6B6B1A; background: #FAFAF0; }
+
+    .notas-pie {
+      margin-top: 2rem;
+      padding: 1rem 1.25rem;
+      background: var(--gris-claro);
+      border-left: 3px solid var(--dorado);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8rem;
+      color: var(--texto-suave);
+    }
+    .notas-pie p { margin-bottom: 0.25rem; }
+    .notas-pie p:last-child { margin-bottom: 0; }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      font-size: 0.78rem;
+      color: var(--texto-suave);
+      border-top: 1px solid var(--gris-borde);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 700px) {
+      header h1 { font-size: 1.4rem; }
+      .informe-contenido { padding: 1.5rem 1.2rem; }
+      .informe-contenido h2 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Previsión Demográfica</h1>
+  <p class="subtitulo">Diócesis de Getafe</p>
+</header>
+
+<nav class="nav-pages">
+  <a href="index.html" class="nav-link">Inicio</a>
+  <a href="poblacion-2025.html" class="nav-link">Población 2025</a>
+  <a href="grupos-edad.html" class="nav-link">Grupos de edad</a>
+  <a href="indicadores.html" class="nav-link">Indicadores</a>
+  <a href="prevision.html" class="nav-link activo">Previsión</a>
+</nav>
+
+<!-- Índice de informes -->
+<div class="indice-informes">
+  <h2>Informes publicados</h2>
+  <div class="informe-card activo">
+    <span class="fecha">Mayo 2026</span>
+    <div>
+      <div class="titulo-card">Licencias de construcción y proyectos de vivienda (2023-2026)</div>
+      <div class="desc-card">Análisis de más de 50.000 viviendas proyectadas en la diócesis · Previsión de crecimiento demográfico a 10-15 años</div>
+    </div>
+  </div>
+</div>
+
+<main>
+<article class="informe-contenido">
+
+  <div class="informe-cabecera">
+    <h1>Licencias de construcción y proyectos de vivienda en la Diócesis de Getafe</h1>
+    <p class="meta">
+      <span class="badge-agente">Agente de Previsiones</span>
+      Informe elaborado el 27 de mayo de 2026 &nbsp;·&nbsp; Horizonte temporal: 2026-2036
+    </p>
+  </div>
+
+  <!-- ══ 1. RESUMEN EJECUTIVO ══ -->
+  <h2>1. Resumen ejecutivo</h2>
+
+  <p>La zona sur y suroeste de la Comunidad de Madrid experimenta en 2025-2026 el ciclo de construcción residencial más intenso desde el período anterior a la crisis financiera de 2008. Los datos recopilados apuntan a la puesta en marcha o planificación de más de <strong>50.000 nuevas viviendas</strong> en el territorio diocesano en los próximos 10-15 años, con una concentración notable en cuatro ejes de crecimiento:</p>
+
+  <ul>
+    <li><strong>Eje metropolitano interior</strong> (Alcorcón, Leganés, Móstoles): grandes desarrollos de suelo y reconversión industrial.</li>
+    <li><strong>Eje sureste</strong> (Getafe, Valdemoro, Pinto, Ciempozuelos): crecimiento sostenido combinando vivienda pública y privada.</li>
+    <li><strong>Corredor suroeste</strong> (Navalcarnero, Villaviciosa de Odón, Villanueva de la Cañada): desbloqueo de desarrollos paralizados desde 2008 y nuevos sectores.</li>
+    <li><strong>Boadilla-Alcorcón (periferia oeste)</strong>: megaproyecto Retamar de la Huerta con 3.500 viviendas.</li>
+  </ul>
+
+  <p>El <strong>Plan Vive</strong> de la Comunidad de Madrid ha actuado como catalizador, con más de 5.363 viviendas de alquiler asequible entregadas en la región a mayo de 2026 y fuerte presencia en los municipios de la diócesis. El Plan de Choque 2026-2027 prevé acelerar aún más el ritmo mediante la nueva Ley de Medidas Urgentes en materia de vivienda.</p>
+
+  <p>Los municipios rurales de los arciprestazgos de Chinchón y San Martín de Valdeiglesias muestran una tendencia de ligero crecimiento (contra la despoblación de décadas anteriores), pero sin proyectos de construcción a gran escala.</p>
+
+  <div class="caja-resumen">
+    <strong>Nivel de confianza global:</strong> medio-alto para proyectos con obras ya iniciadas o viviendas entregadas; medio o bajo para planes urbanísticos que aún requieren aprobación definitiva. Los planes en España se ejecutan habitualmente con retrasos de 3-7 años respecto a las previsiones originales.
+  </div>
+
+  <!-- ══ 2. GRANDES MUNICIPIOS ══ -->
+  <h2>2. Grandes municipios</h2>
+
+  <h3>2.1 Getafe — Arciprestazgo 005 (191.560 hab.)</h3>
+  <p>Getafe lidera el Plan Vive en la región con <strong>864 viviendas entregadas</strong> a mayo de 2026, y combina ese programa con tres proyectos adicionales:</p>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Entrega estimada</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Vive (varias fases)</td><td>864 entregadas + nuevas fases</td><td>En marcha</td><td>2024-2026</td></tr>
+      <tr><td>Plan Parcial AA 0.2 (barrio Juan de la Cierva / Los Ángeles)</td><td>700 (140 protegidas)</td><td>Declarado Especial Relevancia el 18-may-2026</td><td>A partir de 2027</td></tr>
+      <tr><td>Barrio La Aviación (ACAR): nuevo barrio con campus UC3M</td><td>~1.500 (70% pública)</td><td>Concurso internacional en marcha (37 propuestas)</td><td>Horizonte 2030+</td></tr>
+      <tr><td>Parcela cedida a EMSV (zona norte)</td><td>200</td><td>Inicio obras verano 2026</td><td>2028-2029</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="caja-alerta">
+    <strong>Alerta pastoral:</strong> El concurso internacional de diseño del barrio La Aviación está en marcha. Es el momento más oportuno para que la diócesis traslade al Ayuntamiento la necesidad de reservar suelo para equipamiento religioso, antes de que el plan quede fijado definitivamente.
+  </div>
+  <p><strong>Impacto demográfico estimado (10 años):</strong> +6.000 a +8.000 habitantes.</p>
+
+  <h3>2.2 Alcorcón — Arciprestazgo 001 (174.740 hab.)</h3>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Entrega estimada</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Vive (varias promociones)</td><td>956 entregadas + 548 nuevas</td><td>Entregadas / En construcción</td><td>2024-2026</td></tr>
+      <tr><td>Retamar de la Huerta (noroeste, junto a A-5 / M-50)</td><td>3.503 (1.100 protegidas)</td><td>Urbanización iniciada noviembre 2025</td><td>Primeras entregas: 2028-2029</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Retamar de la Huerta es el proyecto clave: 3.503 viviendas (560 unifamiliares y 2.943 en bloque) sobre 1.140.000 m² con 30 hectáreas de zonas verdes. Promotores: Culmia, Llave de Oro, AEDAS Homes, Realia y el Ayuntamiento.</p>
+  <div class="caja-alerta">
+    <strong>Alerta pastoral:</strong> Nuevo barrio en el noroeste del municipio, alejado de las parroquias existentes. A medida que se ejecute (primeras viviendas en 2028-2029), generará demanda de presencia pastoral. Conviene iniciar contactos con la Junta de Compensación para la reserva de suelo dotacional religioso.
+  </div>
+  <p><strong>Impacto demográfico estimado (10 años):</strong> +6.000 a +9.000 habitantes.</p>
+
+  <h3>2.3 Móstoles — Arciprestazgo 008 (213.268 hab.)</h3>
+  <p>Móstoles ha impulsado la mayor operación de transformación urbanística de su historia en 2025-2026:</p>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Horizonte</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Parcial SUS R-1 (norte)</td><td>9.538 (3.371 protegidas)</td><td>Declarado Especial Relevancia</td><td>2028-2035</td></tr>
+      <tr><td>Plan Parcial SUS R-4 (sur)</td><td>2.503 (1.158 protegidas)</td><td>Declarado Especial Relevancia</td><td>2028-2033</td></tr>
+      <tr><td>SUNC-4 (antigua fábrica Moinsa)</td><td>+1.000</td><td>Desbloqueado 2025</td><td>2027-2030</td></tr>
+      <tr><td>Aceleradora Urbanística (SUNC urbano)</td><td>1.638 (327 protegidas)</td><td>Declarado Especial Relevancia feb. 2026</td><td>2027-2030</td></tr>
+      <tr><td>Plan Especial: conversión de locales a viviendas</td><td>~3.000</td><td>Aprobado definitivamente feb. 2026</td><td>En vigor</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="caja-alerta">
+    <strong>Alerta pastoral urgente:</strong> Móstoles tiene solo 11 parroquias para 213.268 habitantes (ratio de 1 parroquia por 19.388 hab., el más alto de la diócesis junto a Parla). Los nuevos sectores norte (SUS R-1) y sur (SUS R-4) quedarán sin cobertura parroquial. Es imprescindible identificar ahora qué parroquia asumirá la atención de cada sector y si serán necesarios centros pastorales provisionales.
+  </div>
+  <p><strong>Impacto demográfico estimado (10-15 años):</strong> +10.000 a +30.000 habitantes según escenario.</p>
+
+  <h3>2.4 Fuenlabrada — Arciprestazgo 004 (190.496 hab.)</h3>
+  <p>El nuevo PGOU, cuyo avance fue aprobado en noviembre de 2023, prevé <strong>8.640 viviendas</strong> nuevas mediante la regeneración de polígonos industriales (La Estación, Constitución, Vereda del Tempranar) y expansión de suelo. A corto plazo (2026-2030), el crecimiento residencial será modesto porque el plan no tiene aún aprobación definitiva.</p>
+  <p><strong>Impacto demográfico estimado (10 años):</strong> +3.000 a +8.000 habitantes (muy dependiente de la aprobación del PGOU).</p>
+
+  <h3>2.5 Leganés — Arciprestazgo 007 (193.934 hab.)</h3>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Horizonte</th></tr></thead>
+    <tbody>
+      <tr><td>Barrio Puerta de Madrid (norte, entre M-45 y Ronda Norte)</td><td>4.000 (2.400 protegidas, 1.500 alquiler asequible)</td><td>Presentado en MIPIM Cannes (marzo 2026); fase inicial</td><td>Más de una década</td></tr>
+      <tr><td>Puerta de Fuenlabrada (en ejecución)</td><td>850</td><td>Primeras entregas finales de 2025</td><td>2025-2026</td></tr>
+      <tr><td>Viviendas municipales en suelo público</td><td>562 (varios barrios)</td><td>Planificadas</td><td>2026-2028</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Impacto demográfico estimado:</strong> +2.000 a +4.000 hab. a 10 años; hasta +12.000 a 15-20 años si Puerta de Madrid avanza.</p>
+
+  <h3>2.6 Parla — Arciprestazgo 010 (134.876 hab. municipio / 150.129 arciprestazgo)</h3>
+  <p>No se han identificado grandes desarrollos de suelo nuevo o proyectos Plan Vive de escala significativa. El crecimiento será principalmente orgánico. Se recomienda consulta directa al planeamiento municipal para completar este análisis.</p>
+  <p><strong>Impacto demográfico estimado (10 años):</strong> +2.000 a +4.000 habitantes.</p>
+
+  <h3>2.7 Arciprestazgo de Valdemoro (187.674 hab.)</h3>
+  <h4>Valdemoro</h4>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Vive "Solución Joven"</td><td>150</td><td>Licitación iniciada 2024</td></tr>
+      <tr><td>Sector R-8 "El Posteguillo", parcela VL-9</td><td>98</td><td>Aprobado nov. 2023</td></tr>
+      <tr><td>AVS: viviendas sociales</td><td>279</td><td>En construcción 2025-2026</td></tr>
+      <tr><td>AVS: pisos para familias vulnerables</td><td>240</td><td>Inicio anunciado sept. 2025</td></tr>
+      <tr><td>Plan Estatal: viviendas alquiler (c/ Gabriela Mistral)</td><td>39</td><td>En obra</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h4>Resto del arciprestazgo</h4>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Municipio</th><th>Proyecto</th><th>Viviendas</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Pinto</td><td>Plan Vive: 422 viviendas</td><td>422</td><td>Llaves entregadas 19 mayo 2026</td></tr>
+      <tr><td>Ciempozuelos</td><td>CooperOpen (Sector 6 Cantarranas)</td><td>~430</td><td>En tramitación</td></tr>
+      <tr><td>Ciempozuelos</td><td>Concovi RDV</td><td>391</td><td>En marcha</td></tr>
+      <tr><td>Torrejón de la Calzada</td><td>Plan Vive (Camesa, fase 3)</td><td>60</td><td>Entrega prevista junio 2026</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Impacto demográfico estimado (10 años, conjunto del arciprestazgo):</strong> +10.000 a +15.000 habitantes.</p>
+
+  <!-- ══ 3. MUNICIPIOS MEDIANOS ══ -->
+  <h2>3. Municipios medianos</h2>
+
+  <h3>3.1 Boadilla del Monte — Arciprestazgo de Villaviciosa de Odón</h3>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Vive: viviendas alquiler (c/ Fray Bartolomé de las Casas)</td><td>524</td><td>Obras mayo 2024; entrega 2026</td></tr>
+      <tr><td>Derecho de superficie El Encinar: VPP alquiler</td><td>460</td><td>Aprobado; pendiente construcción</td></tr>
+      <tr><td>Retamar de la Huerta (limítrofe con Alcorcón)</td><td>Parte de los 3.500</td><td>Urbanización iniciada 2025-2026</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>14 promociones privadas activas en mayo 2026. <strong>Impacto estimado (10 años):</strong> +4.000 a +6.000 habitantes.</p>
+
+  <h3>3.2 Villanueva de la Cañada — Arciprestazgo de Villaviciosa de Odón</h3>
+  <p>El municipio con <strong>mayor potencial de crecimiento relativo</strong> de toda la diócesis:</p>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Horizonte</th></tr></thead>
+    <tbody>
+      <tr><td>Sector I "Los Pocillos" (primera piedra junio 2025)</td><td>2.975 (498 libres multifamiliar + 447 VPL + 542 adosadas + 1.180 pareadas + 300 aisladas)</td><td>Obras de urbanización en marcha</td><td>Viviendas a partir de 2027</td></tr>
+      <tr><td>Nuevo PGOU</td><td>~7.000 total</td><td>En tramitación</td><td>Largo plazo</td></tr>
+      <tr><td>"Los Cantizales" (suelo urbanizable)</td><td>~2.000</td><td>Tramitación muy temprana</td><td>Largo plazo</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="caja-alerta">
+    <strong>Alerta pastoral:</strong> Con ~23.714 habitantes actuales y una única parroquia en el núcleo principal, el nuevo PGOU está diseñado para duplicar la población. Los Pocillos fue paralizado en 2008 y retomó obras de urbanización en junio de 2025. Las primeras viviendas no se esperan antes de 2027, pero es el momento de actuar en cuanto a la planificación parroquial.
+  </div>
+  <p><strong>Impacto demográfico estimado (10-15 años):</strong> +8.000 a +15.000 habitantes (escenario completo).</p>
+
+  <h3>3.3 Navalcarnero — Arciprestazgo 009</h3>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Entrega</th></tr></thead>
+    <tbody>
+      <tr><td>Diverso Navalcarnero III (El Pinar, fase final)</td><td>128</td><td>En ejecución</td><td>T4 2026</td></tr>
+      <tr><td>Plan Vive III: viviendas alquiler (Aedas Homes)</td><td>318</td><td>Obras iniciadas agosto 2024</td><td>Mediados 2026</td></tr>
+      <tr><td>Plan Vive "Solución Joven"</td><td>107</td><td>En trámite</td><td>2026-2027</td></tr>
+      <tr><td>SEPES: viviendas protegidas (2 parcelas)</td><td>345</td><td>Concurso convocado</td><td>A partir de 2027</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Antes de 2026, Navalcarnero dispondrá de 425 viviendas Plan Vive para alquiler asequible; un volumen muy significativo para un municipio de su tamaño. <strong>Impacto estimado (10 años):</strong> +2.500 a +4.000 habitantes.</p>
+
+  <h3>3.4 Aranjuez — Arciprestazgo 002 (62.508 hab.)</h3>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Proyecto</th><th>Viviendas</th><th>Estado</th><th>Entrega</th></tr></thead>
+    <tbody>
+      <tr><td>Plan Vive III (Aedas Homes, barrio La Montaña)</td><td>400 (16 adaptadas a movilidad reducida)</td><td>Obras agosto 2024</td><td>Junio 2026</td></tr>
+      <tr><td>Ampliación alquiler asequible (La Regalada y La Montaña)</td><td>+600</td><td>Anunciado por Ministerio y Comunidad</td><td>2026-2028</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="caja-pastoral">
+    <strong>Nota pastoral:</strong> La llegada de viviendas Plan Vive incorpora un perfil de población joven y familiar que históricamente no ha tenido acceso a la vivienda en la ciudad. Una acogida pastoral activa puede traducirse en un rejuvenecimiento real de la feligresía.
+  </div>
+  <p><strong>Impacto estimado (10 años):</strong> +2.000 a +3.500 habitantes.</p>
+
+  <h3>3.5 Humanes de Madrid — Arciprestazgo de Griñón (20.054 hab.)</h3>
+  <p>50 nuevas viviendas Plan Vive (cofinanciadas con NextGenerationEU) con entrega prevista en junio 2026. Además, varias decenas de unidades en promociones privadas en comercialización. <strong>Impacto estimado (10 años):</strong> +1.500 a +3.000 habitantes.</p>
+
+  <h3>3.6 Villaviciosa de Odón — Arciprestazgo 013 (29.294 hab.)</h3>
+  <p>Plan Municipal de Vivienda 2025-2027: el mayor programa histórico de vivienda protegida del municipio, en tres fases sobre suelo público:</p>
+  <div class="tabla-wrap">
+  <table>
+    <thead><tr><th>Fase</th><th>Viviendas</th><th>Régimen</th><th>Horizonte</th></tr></thead>
+    <tbody>
+      <tr><td>Fase I (parcela M10.P.3, Monte de la Villa)</td><td>148</td><td>Venta VPP</td><td>2025-2026</td></tr>
+      <tr><td>Fase II (Av. Doña Laura García Noblejas)</td><td>135</td><td>Alquiler VPP</td><td>2026</td></tr>
+      <tr><td>Fase III (parcela M19, Monte de la Villa)</td><td>94</td><td>Venta VPP</td><td>2027</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Impacto estimado (10 años):</strong> +1.000 a +2.000 habitantes.</p>
+
+  <h3>3.7 Torrejón de Velasco y Torrejón de la Calzada</h3>
+  <ul>
+    <li><strong>Torrejón de Velasco:</strong> 38 viviendas Plan Vive (proporcionalmente significativo para el municipio).</li>
+    <li><strong>Torrejón de la Calzada:</strong> 60 viviendas Plan Vive (Camesa, fase 3); entrega prevista junio 2026.</li>
+  </ul>
+
+  <h3>3.8 Villa del Prado — Arciprestazgo de Navalcarnero</h3>
+  <p>90 viviendas sociales nuevas (54 de tres dormitorios + 36 de dos), financiadas con 14,8 millones de euros; tramitación aprobada, pendiente construcción.</p>
+
+  <!-- ══ 4. MUNICIPIOS PEQUEÑOS ══ -->
+  <h2>4. Municipios pequeños y rurales</h2>
+
+  <h3>4.1 Tendencia general: recuperación demográfica moderada</h3>
+  <p>La Comunidad de Madrid registra en 2025 un aumento del <strong>16% en municipios menores de 2.500 habitantes</strong> y del <strong>14% en los menores de 5.000</strong> respecto a 2019 (datos oficiales, febrero 2026). En el suroeste, Aldea del Fresno creció un 23% en el último año.</p>
+  <p>Las causas son: generalización del teletrabajo, menor precio de la vivienda que en el área metropolitana, mejora de infraestructuras viarias (A-4, A-5, R-4, R-5) y atractivo de entornos naturales para familias.</p>
+
+  <h3>4.2 Arciprestazgo de Chinchón (21.287 hab.)</h3>
+  <p>Sin proyectos de desarrollo residencial a gran escala identificados. Crecimiento orgánico moderado. Sin impacto parroquial significativo a corto-medio plazo.</p>
+
+  <h3>4.3 Arciprestazgo de San Martín de Valdeiglesias (26.213 hab.)</h3>
+  <p>Sin proyectos de construcción a gran escala. Ligera recuperación poblacional tras décadas de estancamiento. La infraestructura parroquial existente es suficiente para el horizonte temporal estudiado.</p>
+
+  <h3>4.4 Municipios pequeños en arciprestazgos dinámicos</h3>
+  <p>En Batres, Casarrubuelos, Serranillos del Valle, Moraleja de Enmedio (arciprestazgo de Griñón), Quijorna, Brunete (Villaviciosa), Aldea del Fresno, El Álamo, Villamanta, Villamantilla (Navalcarnero) hay crecimientos relativos notables, pero en valores absolutos pequeños. En Brunete y Quijorna se registra reactivación de urbanizaciones privadas de baja densidad.</p>
+
+  <!-- ══ 5. CONCLUSIONES ══ -->
+  <h2>5. Conclusiones y previsión de impacto pastoral</h2>
+
+  <h3>5.1 Clasificación de municipios por intensidad de crecimiento esperado</h3>
+
+  <div class="caja-resumen crec-muy-alto">
+    <strong>Crecimiento muy alto (&gt;5.000 nuevos habitantes en 10-15 años)</strong>
+    <ul style="margin-top:0.5rem; margin-left:1.2rem;">
+      <li>Móstoles (+10.000 a +30.000 a largo plazo)</li>
+      <li>Villanueva de la Cañada (+8.000 a +15.000 en 15 años)</li>
+      <li>Alcorcón (+6.000 a +9.000)</li>
+      <li>Getafe (+6.000 a +8.000)</li>
+    </ul>
+  </div>
+
+  <div class="caja-resumen crec-alto">
+    <strong>Crecimiento alto (2.000-5.000 nuevos habitantes en 10 años)</strong>
+    <ul style="margin-top:0.5rem; margin-left:1.2rem;">
+      <li>Valdemoro y Pinto (conjunto +5.000 a +8.000)</li>
+      <li>Boadilla del Monte (+4.000 a +6.000)</li>
+      <li>Navalcarnero (+2.500 a +4.000)</li>
+      <li>Leganés (+2.000 a +4.000 a 10 años; hasta +12.000 a largo plazo)</li>
+      <li>Parla (+2.000 a +4.000, estimación con confianza baja)</li>
+    </ul>
+  </div>
+
+  <div class="caja-resumen crec-moderado">
+    <strong>Crecimiento moderado (500-2.500 nuevos habitantes en 10 años)</strong>
+    <ul style="margin-top:0.5rem; margin-left:1.2rem;">
+      <li>Aranjuez (+2.000 a +3.500)</li>
+      <li>Humanes de Madrid (+1.500 a +3.000)</li>
+      <li>Ciempozuelos (+1.500 a +2.500)</li>
+      <li>Villaviciosa de Odón (+1.000 a +2.000)</li>
+    </ul>
+  </div>
+
+  <div class="caja-resumen crec-lento">
+    <strong>Crecimiento lento o estabilidad</strong>
+    <ul style="margin-top:0.5rem; margin-left:1.2rem;">
+      <li>Arciprestazgos de Chinchón y San Martín de Valdeiglesias</li>
+      <li>Municipios rurales de sierra y suroeste</li>
+    </ul>
+  </div>
+
+  <h3>5.2 Implicaciones para la organización parroquial</h3>
+
+  <div class="caja-pastoral">
+    <strong>1. Móstoles: planificación pastoral anticipatoria urgente.</strong> Con solo 11 parroquias para 213.268 habitantes actuales (ratio de 1 parroquia por 19.388 hab., de los más bajos de la diócesis), y con la perspectiva de crecer entre 10.000 y 30.000 habitantes en los nuevos sectores (SUS R-1 al norte y SUS R-4 al sur), es imprescindible identificar ahora qué parroquia asumirá la atención pastoral de cada sector y si serán necesarios centros pastorales previos a la posible creación de nuevas parroquias.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>2. Alcorcón: Retamar de la Huerta, un nuevo barrio sin cobertura parroquial inmediata.</strong> El nuevo barrio se localiza en el noroeste del municipio, alejado de los barrios consolidados. A medida que se ejecute (primeras viviendas en 2028-2029), generará demanda de presencia pastoral en ese sector. Convendría identificar ya qué parroquia asumirá la atención e iniciar contactos con la Junta de Compensación para la reserva de suelo dotacional religioso.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>3. Villanueva de la Cañada: duplicación de la población a 15 años.</strong> Con ~23.714 habitantes y tres parroquias en el municipio, la perspectiva de duplicar la población (PGOU) supondría la necesidad de al menos una parroquia adicional o un centro pastoral en el sector Los Pocillos. El proceso de urbanización ya ha comenzado: es el momento de actuar.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>4. Getafe: La Aviación como oportunidad pastoral a reservar ahora.</strong> El concurso internacional de diseño del barrio La Aviación está en marcha (37 propuestas recibidas). Sería el momento más oportuno para que la diócesis trasladara al Ayuntamiento la necesidad de reservar suelo para equipamiento religioso en el proyecto, antes de que el plan quede fijado definitivamente.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>5. Navalcarnero: crecimiento significativo para el conjunto del arciprestazgo.</strong> La concentración de más de 750 viviendas nuevas (2024-2026) en la capital del arciprestazgo, a la que se añadirán las 345 de SEPES, sugiere verificar si la dotación parroquial actual es suficiente para absorber el crecimiento previsto.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>6. Boadilla del Monte y el eje Boadilla-Alcorcón.</strong> Sigue siendo el municipio con mayor renta per cápita del suroeste. El crecimiento previsto (Plan Vive + El Encinar + Retamar limítrofe) refuerza su condición de municipio en expansión. La dotación parroquial actual puede ser suficiente a corto plazo, pero deberá monitorizarse.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>7. Aranjuez: oportunidad de rejuvenecimiento pastoral.</strong> La llegada de 400+ viviendas Plan Vive (junio 2026) y hasta 600 adicionales incorpora un perfil de población joven y familiar que históricamente no ha tenido acceso a la vivienda en la ciudad. Una acogida pastoral activa de estos nuevos vecinos puede traducirse en un rejuvenecimiento real de la feligresía.
+  </div>
+
+  <div class="caja-pastoral">
+    <strong>8. Municipios rurales: papel de cohesión social de la parroquia.</strong> El crecimiento de pequeños municipios en la sierra y en el suroeste responde en parte a una búsqueda de comunidad y calidad de vida. La parroquia rural puede jugar un papel de cohesión social importante en estos contextos, más allá de la función estrictamente religiosa.
+  </div>
+
+  <h3>5.3 Supuestos de las proyecciones</h3>
+  <ul>
+    <li>Los proyectos con obras ya iniciadas o viviendas entregadas se asumen como ejecutables en los plazos indicados (confianza alta).</li>
+    <li>Para proyectos en fase de planeamiento, se aplica un factor de corrección conservador: los planes urbanísticos en España se ejecutan habitualmente con retrasos de 3-7 años respecto a las previsiones originales.</li>
+    <li>Se asume una composición media de 2,3 personas por vivienda nueva (tendencia hacia hogares más pequeños).</li>
+    <li>No se modelizan efectos de demanda inducida (la nueva vivienda atrae servicios y empleo que generan más demanda residencial).</li>
+    <li>Los datos de licencias de edificación desagregados por municipio del INE para 2023-2024 no estaban disponibles en formato accesible al elaborar este informe; las cifras se basan en fuentes periodísticas, comunicados institucionales y documentos de planificación oficiales.</li>
+  </ul>
+
+  <div class="notas-pie">
+    <p>• Informe elaborado por el Agente de Previsiones.</p>
+    <p>• Fecha: 27 de mayo de 2026. Los datos de proyectos en tramitación deben revisarse periódicamente.</p>
+    <p>• Fuentes principales: Plan Vive (Comunidad de Madrid) · idealista/news · municipios.es · prensa local · Ministerio de Transportes.</p>
+  </div>
+
+</article>
+</main>
+
+<footer>
+  <p>Diócesis de Getafe &nbsp;·&nbsp; Informe de Previsiones: mayo 2026</p>
+</footer>
+
+</body>
+</html>
