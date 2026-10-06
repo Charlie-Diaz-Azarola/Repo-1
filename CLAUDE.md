@@ -6,7 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A static site published via **GitHub Pages** for the Diócesis de Getafe (a Spanish Catholic diocese). There is no build system, package manager, or server — every page is a self-contained `.html` file with inline `<style>`/`<script>`. There are no automated tests.
 
-Root `index.html` is a placeholder landing page. All real content lives under `poblaciondiocesana/`, a mini-site presenting INE (Instituto Nacional de Estadística) demographic data for the diocese's municipalities and parishes.
+Root `index.html` is the site-wide menu: it must contain one link to every subfolder's `index.html` in the repository. All current content lives under `poblaciondiocesana/`, a mini-site presenting INE (Instituto Nacional de Estadística) demographic data for the diocese's municipalities and parishes.
+
+**Keep the root menu in sync.** Whenever a folder containing an `index.html` is created, renamed or deleted, update the root `index.html` in the same change: add a link (`<p><a href="carpeta/index.html">Título</a></p>`), fix its path, or remove it. Never leave a link to a folder that no longer exists, nor a folder with an `index.html` missing from the menu.
 
 ## Development workflow
 
