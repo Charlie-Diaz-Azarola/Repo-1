@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch",
+      "Bash(git status *)",
+      "Bash(git branch *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git remote *)",
+      "Bash(git fetch *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(mkdir *)",
+      "mcp__github__create_pull_request",
+      "mcp__github__merge_pull_request"
+    ]
+  }
+}
