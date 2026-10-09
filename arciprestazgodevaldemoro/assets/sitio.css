@@ -115,7 +115,11 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 600; line-height: 1.15; mar
 .bloque[open] summary::before { transform: rotate(90deg); }
 .texto { padding: 0 0 10px 18px; }
 .texto p { margin: 0 0 .6em; }
-.texto ul { margin: 0 0 .8em; padding-left: 1.3em; }
+.texto ul, .texto ol { margin: 0 0 .8em; padding-left: 1.3em; }
+.texto .tabla { overflow-x: auto; margin: 0 0 .9em; }
+.texto table { border-collapse: collapse; font-size: .95rem; }
+.texto th, .texto td { border: 1px solid var(--linea); padding: 5px 10px; text-align: left; vertical-align: top; }
+.texto th { background: var(--linea); }
 .texto li { margin: .15em 0; }
 .texto h3, .texto h4 { font-size: 1.2rem; margin: .8em 0 .3em; }
 
