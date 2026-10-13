@@ -6,10 +6,12 @@ const fs   = require('fs');
 const path = require('path');
 
 // ─── Datos fuente ─────────────────────────────────────────────────────────────
-const JSON_PATH = path.join(
-  __dirname,
-  '../../.claude/projects/OrgTer/datos_ine_municipios.json'
-);
+// Los datos viven en el proyecto OrgTer (fuera de este repositorio).
+const JSON_PATH = [
+  'C:/Documentos próximos/Claude/Proyectos/OrgTer/datos_ine_municipios.json',
+  '/mnt/c/Documentos próximos/Claude/Proyectos/OrgTer/datos_ine_municipios.json',
+].find(p => fs.existsSync(p));
+if (!JSON_PATH) throw new Error('No se encuentra datos_ine_municipios.json en el proyecto OrgTer');
 const raw = JSON.parse(fs.readFileSync(JSON_PATH, 'utf8'));
 
 const PARROQUIAS = {

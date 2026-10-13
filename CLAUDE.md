@@ -6,7 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A static site published via **GitHub Pages** for the Diócesis de Getafe (a Spanish Catholic diocese). There is no build system, package manager, or server — every page is a self-contained `.html` file with inline `<style>`/`<script>`. There are no automated tests.
 
-Root `index.html` is the site-wide menu: it must contain one link to every subfolder's `index.html` in the repository. All current content lives under `poblaciondiocesana/`, a mini-site presenting INE (Instituto Nacional de Estadística) demographic data for the diocese's municipalities and parishes.
+Root `index.html` is the site-wide menu: it must contain one link to every subfolder's `index.html` in the repository. Content lives in subfolders, each maintained by its own local project (this clone is the single local copy of the repository, at `C:\Documentos próximos\Claude\Repositorios en GitHub\Charlie\Repo 1`):
+
+- `poblaciondiocesana/` — mini-site presenting INE (Instituto Nacional de Estadística) demographic data for the diocese's municipalities and parishes. Written by the **OrgTer** project (`C:\Documentos próximos\Claude\Proyectos\OrgTer`).
+- `arciprestazgodevaldemoro/` — site of the Arciprestazgo de Valdemoro, with encrypted sections. **Generated** by the *Web del Arciprestazgo* project (`herramientas/generar.py`); never edit it by hand and never mix its changes into a `poblaciondiocesana/` commit (or vice versa). Do not touch it from here.
 
 **Keep the root menu in sync.** Whenever a folder containing an `index.html` is created, renamed or deleted, update the root `index.html` in the same change: add a link (`<p><a href="carpeta/index.html">Título</a></p>`), fix its path, or remove it. Never leave a link to a folder that no longer exists, nor a folder with an `index.html` missing from the menu.
 
@@ -32,13 +35,14 @@ To preview, just open the `.html` files in a browser (or serve the folder static
 - `piramide-{slug}.html` — one population-pyramid page per municipality that has full male/female age data (`slugMunicipio()` produces the filename slug, e.g. `piramide-alcorcon.html`).
 - It also patches `index.html` in place to insert/keep the shared nav bar (via string search/replace on markers like `nav-pages` and `</header>`), rather than regenerating it fully.
 
-**Important — data source lives outside the repo.** The script reads its source JSON from:
+**Important — data source lives outside the repo.** The script reads its source JSON from the OrgTer project:
 
 ```js
-const JSON_PATH = path.join(__dirname, '../../.claude/projects/OrgTer/datos_ine_municipios.json');
+// Windows path first, WSL path as fallback
+'C:/Documentos próximos/Claude/Proyectos/OrgTer/datos_ine_municipios.json'
 ```
 
-i.e. `~/.claude/projects/OrgTer/datos_ine_municipios.json` relative to a checkout at `~/<repo>/poblaciondiocesana/`. This file is **not part of the repository**. To run the generator you need that JSON present at that path (containing per-municipality population data: `arciprestazgo`, `poblacion.total_2025`, `poblacion.total`/`hombres`/`mujeres` keyed by five-year age group, and `poblacion.anio_quinquenales`). Without it, `generar_html.js` will fail to read the file.
+This file is **not part of the repository**. To run the generator you need that JSON present (containing per-municipality population data: `arciprestazgo`, `poblacion.total_2025`, `poblacion.total`/`hombres`/`mujeres` keyed by five-year age group, and `poblacion.anio_quinquenales`). Without it, `generar_html.js` throws an error saying it cannot find the file.
 
 Other structures to know before editing the script:
 - `PARROQUIAS` — hardcoded map of municipality name → number of parishes, used to compute "habitantes/parroquia".
